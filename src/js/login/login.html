@@ -1,0 +1,22 @@
+<div class="row">
+    <div class="col-sm-4 col-sm-offset-4">
+        <h1>LoginView</h1>
+        <form>
+            <div class="panel panel-default" ng-class="{'is-loading': login.loading, 'animated shake': login.error}">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <input placeholder="Codice Fiscale" class="form-control input-lg" ng-model="login.codiceFiscale">
+                    </div>
+                    <div class="form-group">
+                        <input placeholder="Password"  class="form-control input-lg" ng-model="login.password" type="password">
+                    </div>
+
+                    <div class="alert alert-danger" role="alert" ng-show="login.error">{{login.error}}</div>
+                </div>
+                <div class="panel-footer clearfix">
+                    <button type="submit" class="btn btn-primary btn-lg pull-right" ng-click="login.login(login.codiceFiscale, login.password)">Entra</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+$primary: #23b7e5;
+
+.is-loading {
+    //opacity: 0.25 !important;
+    position: relative;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(#fff, 0.65);
+        z-index: 10;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        border: solid 4px $primary;
+        border-bottom-color: transparent;
+        height: 36px;
+        width: 36px;
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        margin-top: -18px;
+        margin-left: -18px;
+        animation: rotate .6s infinite linear;
+        z-index: 100;
+    }
+}
+
+
+.so-weather__refresh {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    opacity: .65;
+    cursor: pointer;
+}
+
+.so-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba($primary, 1);
+    z-index: 100;
+
+    &::before {
+        content: "";
+        position: absolute;
+        border: solid 4px #fff;
+        border-bottom-color: transparent;
+        height: 36px;
+        width: 36px;
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        margin-top: -18px;
+        margin-left: -18px;
+        animation: rotate .6s infinite linear;
+    }
+
+    &--error::before {
+        border-color: red;
+        animation: none;
+    }
+}
+
+@keyframes rotate {
+    from {transform: rotate(0)}
+    to {transform: rotate(360deg)}
+}

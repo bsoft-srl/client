@@ -1,0 +1,30 @@
+{
+  "name": "angular",
+  "description": "",
+  "main": "index.html",
+  "authors": [
+    "Federico Bassi <effe@dupl.it>"
+  ],
+  "license": "ISC",
+  "moduleType": [],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-ui-router": "~0.2.15",
+    "angular": "~1.4.7",
+    "a0-angular-storage": "~0.0.12",
+    "angular-jwt": "~0.0.9",
+    "bootstrap": "~3.3.5",
+    "font-awesome": "fontawesome#~4.4.0",
+    "angular-chart.js": "~0.8.5",
+    "underscore": "~1.8.3",
+    "weather-icons": "~2.0.10"
+  }
+}
