@@ -32,7 +32,8 @@ var config = {
                 './bower_components/a0-angular-storage/dist/angular-storage.js',
                 './bower_components/angular-jwt/dist/angular-jwt.js',
                 './bower_components/bootstrap/dist/js/bootstrap.js',
-                './bower_components/Chart.js/Chart.js',
+                './bower_components/moment/moment.js',
+                './bower_components/Chart.js-2.0.0-beta/Chart.js',
                 './bower_components/angular-chart.js/dist/angular-chart.js'
             ],
 

@@ -47,6 +47,32 @@
           datasetFill : false,
         };
 
+        vm.chartOptions = {
+            type: 'line',
+            elements: {
+                line: {
+                    tension: 0,
+                    fill: false,
+                    borderWidth: 2
+                },
+                point: {
+                    radius: 3,
+                    hoverBorderWidth: 2
+                }
+            },
+            gridLines: {
+                show: false
+            },
+            scales: {
+                xAxes: [{
+                    display: false
+                }],
+                yAxes: [{
+                    display: false
+                }]
+            }
+        };
+
         vm.lineChart = null;
 
         initialize();
@@ -101,21 +127,21 @@
                 labels: [],
                 datasets: [
                     {
-                        label: 'Max.',
-                        strokeColor: 'rgba(35,183,229,1)',
-                        pointColor: 'rgba(35,183,229,1)',
-                        pointStrokeColor: '#fff',
-                        pointHighlightFill: '#fff',
-                        pointHighlightStroke: 'rgba(35,183,229,1)',
+                        label: 'Max',
+                        borderColor: 'rgba(35,183,229,1)',
+                        pointBackgroundColor: 'rgba(35,183,229,1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(35,183,229,1)',
                         data: []
                     },
                     {
-                        label: 'Min.',
-                        strokeColor: '#ddd',
-                        pointColor: '#ddd',
-                        pointStrokeColor: '#fff',
-                        pointHighlightFill: '#fff',
-                        pointHighlightStroke: '#ddd',
+                        label: 'Min',
+                        borderColor: '#ddd',
+                        pointBackgroundColor: '#ddd',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#ddd',
                         data: []
                     }
                 ]

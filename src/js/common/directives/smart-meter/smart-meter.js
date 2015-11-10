@@ -6,15 +6,18 @@
     /**
      *
      */
-    Directive.$inject = [];
-    function Directive() {
+    Directive.$inject = ['$timeout'];
+    function Directive($timeout) {
         return {
             restrict: 'E',
             scope: {
                 id: '=',
                 metric: '=',
                 channels: '=',
-                data: '='
+                data: '=',
+                initialized: '&',
+                from: '=',
+                to: '='
             },
             controller: Controller,
             controllerAs: 'sm',
@@ -33,23 +36,39 @@
         vm.channel = 1;
         vm.loading = false;
         vm.refresh = refresh;
+        vm.initialized = $scope.initialized;
+        vm.from = $scope.from;
+        vm.to = $scope.to;
 
-        vm.lineOptions = {
-          scaleShowGridLines: false,
-          bezierCurve : false,
-          //showScale: false,
-          //pointDotRadius : 4,
-          //pointDotStrokeWidth : 1,
-          pointHitDetectionRadius : 0,
-          //datasetStroke : false,
-          pointDot: false,
-          datasetStrokeWidth : 2,
-          datasetFill : false,
-          maintainAspectRatio: false,
-          //showTooltips: false,
-          pointHitDetectionRadius : 0,
-          animation: false,
-          legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+        vm.chartOptions = {
+            type: 'line',
+            elements: {
+                line: {
+                    tension: 0,
+                    //fill: false,
+                    borderWidth: 2
+                },
+                point: {
+                    radius: 3,
+                    hoverBorderWidth: 2
+                },
+            },
+            gridLines: {
+                show: false
+            },
+            scales: {
+                xAxes: [{
+                    //display: false
+                    type: 'time',
+                    time: {
+                        unit: 'hour',
+                        //round: 'day',
+                    }
+                }],
+                yAxes: [{
+                    //display: false
+                }]
+            }
         };
 
         vm.lineChart = null;
@@ -89,23 +108,54 @@
                 labels: [],
                 datasets: [
                     {
-                        label: 'Max.',
-                        strokeColor: 'rgba(35,183,229,1)',
-                        pointColor: 'rgba(35,183,229,1)',
-                        pointStrokeColor: '#fff',
-                        pointHighlightFill: '#fff',
-                        pointHighlightStroke: 'rgba(35,183,229,1)',
+                        label: 'Valore',
+                        borderColor: 'rgba(35,183,229,1)',
+                        backgroundColor: 'rgba(35,183,229,.25)',
+                        pointBackgroundColor: 'rgba(35,183,229,1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(35,183,229,1)',
                         data: []
                     }
                 ]
             };
 
-            _.each(rows.dps, function (el, k) {
-                var
-                    time = new Date(k*1000);
-                lineChart.labels.push(time.getDate() + '/' + (time.getMonth() + 1) + ' ' + time.getHours() + ':' + time.getMinutes());
-                lineChart.datasets[0].data.push(el.toFixed(4));
-            })
+            /*
+            scales: {
+                xAxes: [{
+                    type: "time",
+                    display: true,
+                    time: {
+                        format: 'MM/DD/YYYY HH:mm',
+                        // round: 'day'
+                    },
+                    scaleLabel: {
+                        show: true,
+                        labelString: 'Date'
+                    }
+                }, ],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        show: true,
+                        labelString: 'value'
+                    }
+                }]
+
+            */
+
+
+
+            //lineChart.labels = _.keys(rows.dps);
+            //lineChart.datasets[0].data = _.values(rows.dps);
+            lineChart.datasets[0].data = _.map(rows.dps, function (v, k) {
+                return {
+                    x: k * 1000,
+                    y: v
+                }
+            });
+
+            console.log(rows.dps);
 
             return lineChart;
         }
@@ -126,15 +176,17 @@
             vm.loading = true;
             //vm.lineChart = null;
 
-            console.debug('Fetching smart meter data…', API_URL + '/sensori/' + vm.id + '/' + vm.metric + '/' + channel + '?start=12h-ago&downsample=1h-avg');
+            console.debug(API_URL + '/sensori/' + vm.id + '/' + vm.metric + '/' + (channel + 1) + '?start=' + new Date(vm.from).getTime() + '&end=' + new Date(vm.to).getTime() + '&downsample=1h-avg');
 
-            $http.get(API_URL + '/sensori/' + vm.id + '/' + vm.metric + '/' + (channel + 1) + '?start=36h-ago&downsample=1h-avg')
+
+            $http.get(API_URL + '/sensori/' + vm.id + '/' + vm.metric + '/' + (channel + 1) + '?start=' + new Date(vm.from).getTime() + '&end=' + new Date(vm.to).getTime() + '&downsample=1h-avg')
                 .then(function (res) {
                     vm.data = res.data.payload;
                     vm.lineChart = chartSmartMeterData(vm.data[0]);
                     vm.channel = channel;
                     vm.title = labels(vm.metric, channel);
-                    console.debug('Fetching smart meter data… Done');
+                    vm.initialized();
+                    console.debug('Fetching smart meter data… Done', vm.data);
                 })
                 .catch(function (err) {
                     console.log(err);

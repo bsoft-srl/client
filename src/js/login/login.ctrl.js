@@ -15,6 +15,8 @@
 
         vm.error = false;
         vm.loading = false;
+        vm.codiceFiscale = 'DLLNDR73P22B963U';
+        vm.password = 'sideco';
 
         vm.login = login;
 
@@ -34,7 +36,7 @@
                 $state.go('dashboard');
             })
             .catch(function (err) {
-                vm.error = err.data.message;
+                vm.error = err.data ? err.data.message : 'Impossibile contattare il server.';
             })
             .finally(function () {
                 vm.loading = false;

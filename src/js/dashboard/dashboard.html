@@ -1,45 +1,54 @@
 <div class="so-overlay" ng-class="{'so-overlay--error': dashboard.error}" ng-show="dashboard.loading"></div>
 
 <div class="content-wrapper">
-    <h3>
-        <em class="fa fa-pie-chart"></em> Dashboard
-        <small>CODICE_FISCALE</small>
+    <h3 class="clearfix">
+        <span class="pull-left">
+            <em class="fa fa-pie-chart"></em> Dashboard
+        </span>
+
+        <div class="btn-toolbar pull-right">
+            <div class="btn-group btn-group-sm" role="group" aria-label="">
+                <button type="button" class="btn btn-default" ng-click="dashboard.logout()"><em class="fa fa-sign-out"></em> Esci</button>
+            </div>
+        </div>
     </h3>
 
     <div class="row">
         <aside class="col-lg-3 col-lg-push-9">
 
+            <div class="panel panel-default" ng-if="dashboard.store.edifici" ng-repeat="e in dashboard.store.edifici">
+                <div class="panel-heading">
+                    <div class="panel-title">{{e.denominazione}}</div>
+                    <small class="text-muted">{{e.indirizzo}} {{e.civico}}</small>
+                </div>
 
-      <div class="panel" ng-repeat="e in dashboard.store.edifici">
+                <div class="panel-body">
+                    <div class="list-group mb0">
+                        <a href="#" class="list-group-item" ng-click="dashboard.select(ui.id)" ng-repeat="ui in dashboard.findByE(e.id)">
+                            <span class="label label-warning pull-right">{{dashboard.getSmartMeterByUI(ui.id).length}}</span>
+                            <em class="fa fa-home mr"></em>{{ui.id}}
+                        </a>
+                    </div>
+                </div>
 
-        <div class="panel-heading  bg-gray-dark">
-            <div class="panel-title">
-                {{e.denominazione}}<br>
-                <small>ADDRESS</small>
+                <!--<div class="panel-footer">
+                    FOOTER
+                </div>-->
             </div>
-        </div>
 
-        <div class="panel-body">
-            <ul class="list-inline">
-                <li ng-repeat="ui in dashboard.findByE(e.id)">
-                    <a href="#" ng-click="dashboard.select(ui.id)"><em class="fa fa-home"></em> {{ui.id}}</a>
-                </li>
-            </ul>
-        </div>
-      </div>
 
         </aside>
         <main class="col-lg-9 col-lg-pull-3">
 
             <div class="row animated fadeInDown" ng-if="dashboard.selected">
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-4 col-md-12">
                     <div class="panel widget bg-success">
                         <div class="row row-table">
                             <div class="col-xs-4 text-center bg-success-dark pv-lg">
                                 <em class="fa fa-home fa-3x"></em>
                             </div>
                             <div class="col-xs-8 pv-lg">
-                                <div class="h1 m0 text-bold">{{dashboard.selected}}</div>
+                                <div class="h2 m0 text-bold">{{dashboard.selected}}</div>
                                 <div class="text-uppercase">Numero Contatore</div>
                             </div>
                         </div>
@@ -53,7 +62,7 @@
                                 <em class="fa fa-plug fa-3x"></em>
                             </div>
                             <div class="col-xs-8 pv-lg">
-                                <div class="h1 m0 text-bold">{{dashboard.store.sensori.length}}</div>
+                                <div class="h2 m0 text-bold">{{dashboard.store.sensori.length}}</div>
                                 <div class="text-uppercase">Numero Sensori</div>
                             </div>
                         </div>
@@ -64,13 +73,23 @@
                     <div class="panel widget bg-purple">
                         <div class="row row-table">
                             <div class="col-xs-4 text-center bg-purple-dark pv-lg">
-                                <em class="fa fa-plug fa-3x"></em>
+                                <em class="fa fa-calendar fa-3x"></em>
                             </div>
                             <div class="col-xs-8 pv-lg">
-                                <div class="h1 m0 text-bold">{{dashboard.store.sensori.length}}</div>
-                                <div class="text-uppercase">Numero Sensori</div>
+                                <input class="h2 m0 text-bold" id="so-from" so-date-picker ng-model="dashboard.from" type="text" placeholder="Inizio" ng-click="dashboard.handleFromClick()">
+                                <input id="so-to" so-date-picker type="text" ng-model="dashboard.to" placeholder="Fine" ng-disabled="!dashboard.from || (dashboard.from && dashboard.to)">
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" ng-if="dashboard.selected && !dashboard.smartMeterDidInit && dashboard.from && dashboard.to">
+                <div class="col-lg-12">
+                    <div class="progress">
+                      <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: 100%">
+                        <span class="sr-only">Loading…</span>
+                      </div>
                     </div>
                 </div>
             </div>
@@ -79,10 +98,14 @@
                 id="dashboard.selected"
                 data="sm"
                 metric="sm.tipologia"
+                from="dashboard.from"
+                to="dashboard.to"
                 channels="sm.numero_canali"
+                initialized="dashboard.smartMeterInitialized(dashboard.store.sensori.length)"
                 ng-repeat="sm in dashboard.store.sensori"
-                ng-if="dashboard.selected">
+                ng-if="dashboard.selected && dashboard.from && dashboard.to">
             </so-smart-meter>
+
 
             <so-weather fetch="dashboard.getWeather()" limit="5"></so-weather>
         </main>
