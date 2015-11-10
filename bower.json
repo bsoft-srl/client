@@ -26,6 +26,7 @@
     "angular-chart.js": "~0.8.5",
     "underscore": "~1.8.3",
     "weather-icons": "~2.0.10",
-    "moment": "~2.10.6"
+    "moment": "~2.10.6",
+    "c3": "~0.4.10"
   }
 }

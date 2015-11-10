@@ -3,12 +3,13 @@
         .module('app')
         .directive('soChart', directive);
 
+    /**
+     *
+     */
     directive.$inject = [];
     function directive() {
         return {
             restrict: 'A',
-            controller: controller,
-            controllerAs: 'chart',
             scope: {
                 data: '=soChart',
                 options: '=options'
@@ -17,21 +18,56 @@
         }
     }
 
+    /**
+     *
+     */
     function link(scope, el, attrs) {
 
         var chart;
 
+        /**
+         *
+         */
+        function update() {
+            var
+                defaults = {
+                    bindto: el[0],
+                    data: scope.data,
+                    grid: {
+                        y: {
+                            show: true
+                        }
+                    },
+                    legend: {
+                        show: false
+                    },
+                    point: {
+                        show: false
+                    },
+                    size: {
+                        height: scope.height
+                    },
+                    axis: {
+                        x: {
+                            type: 'category',
+                            tick: {
+                                count: 4
+                            }
+                        }
+                    }
+                };
+
+            var retval = _.extend(defaults, scope.options);
+
+            console.log(retval);
+
+            return retval;
+        }
+
         scope.$watch('data', function () {
-
-            if (chart) chart.destroy();
-
-            chart = new Chart(el, {
-                type: 'line',
-                data: scope.data,
-                options: scope.options
-            });
+            chart.load(scope.data);
         });
-    }
 
-    function controller() {}
+        chart = c3.generate(update());
+    }
 })();

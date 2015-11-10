@@ -36,26 +36,18 @@
         </div>
     </div>
 
-   <div class="col-lg-12" ng-if="weather.lineChart">
+   <div class="col-lg-12" ng-if="weather.chartData">
       <div class="panel widget" ng-class="{'is-loading': weather.loading}">
         <div class="panel-body">
             <div class="text-info">
                 <em class="wi wi-thermometer fa-2x text-muted pull-right"></em>
-                Andamento previsionale temperature a {{weather.lineChart.labels.length}} giorni
+                Andamento previsionale temperature a {{weather.chartData.columns[0].length - 1}} giorni
             </div>
             <div class="pv-lg">
-                <canvas
-                    so-chart="weather.lineChart"
+                <div
+                    so-chart="weather.chartData"
                     options="weather.chartOptions"
-                    height="48"
-                ></canvas>
-                <!--<canvas
-                    linechart=""
-                    options="weather.lineOptions"
-                    data="weather.lineChart"
-                    height="48"
-                    responsive="true">
-                </canvas>-->
+                ></div>
             </div>
         </div>
         <div class="panel-footer">

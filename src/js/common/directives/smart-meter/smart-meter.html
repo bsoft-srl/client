@@ -1,4 +1,4 @@
-<div class="row animated fadeInDown" ng-if="sm.lineChart">
+<div class="row animated fadeInDown" ng-if="sm.chartData">
     <div class="col-lg-12">
         <div class="panel widget" ng-class="{'is-loading': sm.loading}">
             <div class="panel-heading">
@@ -21,9 +21,7 @@
 
             <div class="panel-body">
                 <div class="pv-lg">
-
-                    <canvas so-chart="sm.lineChart" options="sm.chartOptions" height="100"></canvas>
-
+                    <div so-chart="sm.chartData" options="sm.chartOptions"></div>
                 </div>
             </div>
 

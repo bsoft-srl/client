@@ -35,45 +35,32 @@
         vm.refresh = refresh;
         vm.iconCondition = iconCondition;
 
-        vm.lineOptions = {
-          scaleShowGridLines : false,
-          bezierCurve : false,
-          showScale: false,
-          pointDotRadius : 4,
-          pointDotStrokeWidth : 1,
-          pointHitDetectionRadius : 20,
-          datasetStroke : false,
-          datasetStrokeWidth : 2,
-          datasetFill : false,
-        };
-
         vm.chartOptions = {
-            type: 'line',
-            elements: {
-                line: {
-                    tension: 0,
-                    fill: false,
-                    borderWidth: 2
-                },
-                point: {
-                    radius: 3,
-                    hoverBorderWidth: 2
-                }
-            },
-            gridLines: {
-                show: false
-            },
-            scales: {
-                xAxes: [{
-                    display: false
-                }],
-                yAxes: [{
-                    display: false
-                }]
+            point: {
+                show: true
             }
         };
 
-        vm.lineChart = null;
+        vm.chartData = null;
+
+        function updateChartData(rows) {
+            var data = {
+                x: 'x',
+                columns: [
+                    ['x'],
+                    ['max'],
+                    ['min']
+                ]
+            };
+
+            rows.forEach(function (row) {
+                data.columns[0].push(row.data);
+                data.columns[1].push(row.temperature.max);
+                data.columns[2].push(row.temperature.min);
+            });
+
+            return data;
+        }
 
         initialize();
 
@@ -163,27 +150,23 @@
 
             if (!force && store.get('weather')) {
                 vm.data = store.get('weather');
-                vm.lineChart = chartTempForecastData(vm.data.previsioni);
+                vm.chartData = updateChartData(vm.data.previsioni);
                 return;
             }
 
             vm.loading = true;
-            //vm.lineChart = null;
 
             console.debug('Fetching weather data…');
 
             $scope.fetch()
                 .then(function (res) {
                     vm.data = res.data.payload;
-                    vm.lineChart = chartTempForecastData(vm.data.previsioni);
+                    vm.chartData = updateChartData(vm.data.previsioni);
                     console.debug('Fetching weather data… Done');
-                    console.debug('Setting weather data in store…');
                     store.set('weather', vm.data);
-                    console.debug('Setting weather data in store… Done');
                 })
                 .catch(function (err) {
-                    console.log(err);
-                    vm.error = err.data.message;
+                    vm.error = err.data ? err.data.message : 'Impossibile contattare il server.';
                 })
                 .finally(function () {
                     vm.loading = false;

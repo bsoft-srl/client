@@ -34,13 +34,16 @@ var config = {
                 './bower_components/bootstrap/dist/js/bootstrap.js',
                 './bower_components/moment/moment.js',
                 './bower_components/Chart.js-2.0.0-beta/Chart.js',
-                './bower_components/angular-chart.js/dist/angular-chart.js'
+                './bower_components/angular-chart.js/dist/angular-chart.js',
+                './bower_components/d3/d3.js',
+                './bower_components/c3/c3.js',
             ],
 
             css: [
                 './bower_components/bootstrap/dist/css/bootstrap.css',
                 './bower_components/font-awesome/css/font-awesome.css',
-                './bower_components/weather-icons/css/weather-icons.css'
+                './bower_components/weather-icons/css/weather-icons.css',
+                './bower_components/c3/c3.css',
             ]
         }
     }

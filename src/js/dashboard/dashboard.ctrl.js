@@ -73,7 +73,7 @@
          *
          */
         function findByE(id) {
-            var retval = _.where(vm.store.unita_immobiliari, {'parent_id': id});
+            var retval = _.where(vm.store.unita_immobiliari, {'parent_id': id + ''});
             return retval;
         }
 
