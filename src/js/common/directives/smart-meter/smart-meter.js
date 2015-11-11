@@ -55,6 +55,9 @@
                         format: d3.format('.4f')
                     }
                 }
+            },
+            subchart: {
+                show: true
             }
         };
 
