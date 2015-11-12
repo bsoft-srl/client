@@ -36,7 +36,7 @@
         </div>
     </div>
 
-   <div class="col-lg-12" ng-if="weather.chartData">
+   <div class="col-lg-12" ng-if="weather.canvasData">
       <div class="panel widget" ng-class="{'is-loading': weather.loading}">
         <div class="panel-body">
             <div class="text-info">
@@ -45,8 +45,9 @@
             </div>
             <div class="pv-lg">
                 <div
-                    so-chart="weather.chartData"
-                    options="weather.chartOptions"
+                    so-canvas="weather.canvasData"
+                    options="weather.canvasOptions"
+                    style="height: 200px; width: 100%"
                 ></div>
             </div>
         </div>

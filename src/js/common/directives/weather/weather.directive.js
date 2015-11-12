@@ -42,6 +42,8 @@
         };
 
         vm.chartData = null;
+        vm.canvasData = null;
+        vm.canvasOptions = null;
 
         function updateChartData(rows) {
             var data = {
@@ -57,6 +59,44 @@
                 data.columns[0].push(row.data);
                 data.columns[1].push(row.temperature.max);
                 data.columns[2].push(row.temperature.min);
+            });
+
+            return data;
+        }
+
+        /**
+         *
+         */
+        function updateCanvasData(rows) {
+            var data = [
+                {
+                    legendText: 'Max',
+                    type: 'line',
+                    color: '#286090',
+                    lineThickness: 1,
+                    markerSize: 5,
+                    dataPoints: []
+                },
+                {
+                    legendText: 'Min',
+                    type: 'line',
+                    color: '#ec971f',
+                    lineThickness: 1,
+                    markerSize: 5,
+                    dataPoints: []
+                }
+            ];
+
+            _.each(rows, function (row) {
+                data[0].dataPoints.push({
+                    label: row.data,
+                    y: row.temperature.max
+                });
+
+                data[1].dataPoints.push({
+                    label: row.data,
+                    y: row.temperature.min
+                });
             });
 
             return data;
@@ -151,6 +191,7 @@
             if (!force && store.get('weather')) {
                 vm.data = store.get('weather');
                 vm.chartData = updateChartData(vm.data.previsioni);
+                vm.canvasData = updateCanvasData(vm.data.previsioni);
                 return;
             }
 
@@ -162,6 +203,7 @@
                 .then(function (res) {
                     vm.data = res.data.payload;
                     vm.chartData = updateChartData(vm.data.previsioni);
+                    vm.canvasData = updateCanvasData(vm.data.previsioni);
                     console.debug('Fetching weather data… Done');
                     store.set('weather', vm.data);
                 })

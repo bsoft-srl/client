@@ -13,6 +13,7 @@
         </div>
     </h3>
 
+
     <div class="row">
         <aside class="col-lg-3 col-lg-push-9">
 
@@ -36,10 +37,8 @@
                 </div>-->
             </div>
 
-
         </aside>
         <main class="col-lg-9 col-lg-pull-3">
-
             <div class="row animated fadeInDown" ng-if="dashboard.selected">
                 <div class="col-lg-4 col-md-12">
                     <div class="panel widget bg-success">
@@ -70,21 +69,11 @@
                 </div>
 
                 <div class="col-lg-4 col-md-12">
-                    <div class="panel widget bg-purple">
-                        <div class="row row-table">
-                            <div class="col-xs-4 text-center bg-purple-dark pv-lg">
-                                <em class="fa fa-calendar fa-3x"></em>
-                            </div>
-                            <div class="col-xs-8 pv-lg">
-                                <input class="h2 m0 text-bold" id="so-from" so-date-picker ng-model="dashboard.from" type="text" placeholder="Inizio" ng-click="dashboard.handleFromClick()">
-                                <input id="so-to" so-date-picker type="text" ng-model="dashboard.to" placeholder="Fine" ng-disabled="!dashboard.from || (dashboard.from && dashboard.to)">
-                            </div>
-                        </div>
-                    </div>
+                    <so-datepicker start="dashboard.start" end="dashboard.end"></so-datepicker>
                 </div>
             </div>
 
-            <div class="row" ng-if="dashboard.selected && !dashboard.smartMeterDidInit && dashboard.from && dashboard.to">
+            <div class="row" ng-if="dashboard.selected && !dashboard.smartMeterDidInit && dashboard.startsss && dashboard.end">
                 <div class="col-lg-12">
                     <div class="progress">
                       <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: 100%">
@@ -98,12 +87,11 @@
                 id="dashboard.selected"
                 data="sm"
                 metric="sm.tipologia"
-                from="dashboard.from"
-                to="dashboard.to"
+                start="dashboard.start"
+                end="dashboard.end"
                 channels="sm.numero_canali"
-                initialized="dashboard.smartMeterInitialized(dashboard.store.sensori.length)"
                 ng-repeat="sm in dashboard.store.sensori"
-                ng-if="dashboard.selected && dashboard.from && dashboard.to">
+                ng-if="dashboard.selected && dashboard.start && dashboard.end">
             </so-smart-meter>
 
             <so-weather fetch="dashboard.getWeather()" limit="5"></so-weather>

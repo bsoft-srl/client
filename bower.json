@@ -23,10 +23,8 @@
     "angular-jwt": "~0.0.9",
     "bootstrap": "~3.3.5",
     "font-awesome": "fontawesome#~4.4.0",
-    "angular-chart.js": "~0.8.5",
     "underscore": "~1.8.3",
     "weather-icons": "~2.0.10",
-    "moment": "~2.10.6",
-    "c3": "~0.4.10"
+    "moment": "~2.10.6"
   }
 }

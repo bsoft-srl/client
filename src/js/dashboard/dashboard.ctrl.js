@@ -1,16 +1,15 @@
 (function () {
     angular
         .module('app.dashboard')
-        .controller('DashboardCtrl', Controller);
+        .controller('DashboardCtrl', controller);
 
     /**
      *
      */
-    Controller.$inject = ['$rootScope', '$scope', '$state', '$http', 'SidecoStore', 'API_URL'];
+    controller.$inject = ['$rootScope', '$scope', '$state', '$http', 'SidecoStore', 'API_URL'];
 
-    function Controller($rootScope, $scope, $state, $http, store, API_URL) {
-        var
-            vm = this;
+    function controller($rootScope, $scope, $state, $http, store, API_URL) {
+        var vm = this;
 
         vm.loading = true;
         vm.initialized = false;
@@ -18,24 +17,39 @@
         vm.store = {};
         vm.smartMeterDidInit = false;
 
-        vm.from = '';
-        vm.to = '';
-
-        vm.selected = null;
-        vm.select = select;
-
         vm.findByE = findByE;
         vm.getSmartMeterByUI = getSmartMeterByUI;
         vm.getWeather = getWeather;
         vm.logout = logout;
         vm.smartMeterInitialized = smartMeterInitialized();
 
-        vm.handleFromClick = function () {
-            vm.to = '';
-            vm.smartMeterDidInit = false;
-        }
+        /* */
+        vm.selected = null;
+        vm.select = select;
+
+        /* */
+        vm.start = moment().format('DD-MM-YYYY');
+        vm.end = moment().format('DD-MM-YYYY');
+        vm.parseStart = parseStart;
+        vm.parseEnd = parseEnd;
 
         initialize();
+
+        /**
+         *
+         */
+        function parseStart(date, raw) {
+             var retval = moment(date, 'DD-MM-YYYY').startOf('day');
+             return raw ? retval : retval.valueOf();
+        }
+
+        /**
+         *
+         */
+        function parseEnd(date, raw) {
+              var retval = moment(date, 'DD-MM-YYYY').endOf('day');
+              return raw ? retval : retval.valueOf();
+        }
 
         /**
          *

@@ -2,33 +2,61 @@
 
     angular
         .module('app')
-        .directive('soDatePicker', directive);
+        .directive('soDatepicker', directive);
 
+    /**
+     *
+     */
     directive.$inject = [];
+
     function directive() {
         return {
-            restrict: 'A',
-            link: function (scope, el, attrs) {
-
-                el.datepicker({
-                    defaultDate: "-3d",
-                    changeMonth: true,
-                    numberOfMonths: 1,
-                    maxDate: "-1d",
-                    minDate: "-7d",
-                    onClose: function( selectedDate ) {
-                        var
-                            selected = new Date(selectedDate),
-                            nextDay = new Date(selected);
-
-                        nextDay.setDate(selected.getDate() + 1);
-
-                        $("#so-to").datepicker( "option", "minDate", nextDay );
-                        $("#so-to").datepicker( "option", "maxDate", 'today' );
-                    }
-                });
-            }
+            restrict: 'E',
+            templateUrl: 'common/directives/datepicker/datepicker.html',
+            scope: {
+                start: '=',
+                end: '='
+            },
+            controller: controller,
+            controllerAs: 'dp',
+            link: link
         }
+    }
+
+    /**
+     *
+     */
+     controller.$inject = [];
+
+    function controller() {
+        var vm = this;
+    }
+
+    /**
+     *
+     */
+    function link(scope, el, attrs) {
+
+        var
+            $start = el.find('.so-datepicker--start'),
+            $end = el.find('.so-datepicker--end'),
+            sharedOpts = {
+                dateFormat: 'dd-mm-yy',
+                changeMonth: true,
+                maxDate: 'today'
+            };
+
+        $start.datepicker(_.extend(sharedOpts, {
+            onClose: function (date) {
+                $end.datepicker('option', 'minDate', date);
+            }
+        }));
+
+        $end.datepicker(_.extend(sharedOpts, {
+            onClose: function (date) {
+                $start.datepicker('option', 'maxDate', date);
+            }
+        }));
     }
 
 })();

@@ -1,13 +1,13 @@
 (function () {
     angular
         .module('app')
-        .directive('soSmartMeter', Directive);
+        .directive('soSmartMeter', directive);
 
     /**
      *
      */
-    Directive.$inject = ['$timeout'];
-    function Directive($timeout) {
+    directive.$inject = [];
+    function directive() {
         return {
             restrict: 'E',
             scope: {
@@ -16,77 +16,94 @@
                 channels: '=',
                 data: '=',
                 initialized: '&',
-                from: '=',
-                to: '='
+                start: '=',
+                end: '='
             },
-            controller: Controller,
+            controller: controller,
             controllerAs: 'sm',
             templateUrl: 'common/directives/smart-meter/smart-meter.html'
         }
     }
 
-    Controller.$inject = ['$scope', '$http', 'API_URL'];
-    function Controller($scope, $http, API_URL) {
+    /**
+     *
+     */
+    controller.$inject = ['$scope', '$http', 'API_URL'];
+    function controller($scope, $http, API_URL) {
         var vm = this;
 
         vm.id = $scope.id;
         vm.info = $scope.data;
         vm.metric = $scope.metric;
-        vm.channels = _.range($scope.channels);
-        vm.channel = 1;
         vm.loading = false;
         vm.refresh = refresh;
-        vm.initialized = $scope.initialized;
-        vm.from = $scope.from;
-        vm.to = $scope.to;
 
+        /* */
+        vm.channels = _.range($scope.channels);
+        vm.channel = 1;
+
+        /* */
+        vm.start = $scope.start;
+        vm.end = $scope.end;
+
+        /* */
         vm.chartData = null;
-        vm.chartOptions = {
-            axis: {
-                x: {
-                    type: 'timeseries',
-                    tick: {
-                        format: '%d/%m/%y %H:%M',
-                        count: 6,
-                    }
-                },
-                y: {
-                    tick: {
-                        format: d3.format('.4f')
-                    }
-                }
-            },
-            subchart: {
-                show: true
-            }
-        };
+        vm.chartOptions = null;
 
-        initialize();
+        //refresh();
 
-        ////////
-
-        function initialize() {
-            refresh();
+        /**
+         *
+         */
+        function parseStart(date, raw) {
+             var retval = moment(date, 'DD-MM-YYYY').startOf('day');
+             return raw ? retval : retval.valueOf();
         }
 
         /**
          *
          */
+        function parseEnd(date, raw) {
+              var retval = moment(date, 'DD-MM-YYYY').endOf('day');
+              return raw ? retval : retval.valueOf();
+        }
+
+        vm.init = false;
+
+        $scope.$watch('start', function (newvalue, oldvalue) {
+            if (!vm.loading) {
+                vm.start = newvalue;
+                refresh();
+            }
+        });
+
+        $scope.$watch('end', function (newvalue, oldvalue) {
+            if (!vm.loading) {
+                vm.end = newvalue;
+                refresh();
+            }
+        });
+
+        /**
+         *
+         */
         function updateChartData(rows) {
-            var data = {
-                x: 'x',
-                columns: [
-                    ['x'],
-                    ['val']
-                ]
-            };
+            var dataPoints = [];
 
             _.each(rows.dps, function (v, k) {
-                data.columns[0].push(k * 1000);
-                data.columns[1].push(v);
+                dataPoints.push({
+                    label: moment.unix(k).format('DD MMM YYYY HH:mm'),
+                    y: v
+                })
             });
 
-            return data;
+            return [{
+                type: 'area',
+                fillOpacity: .25,
+                lineThickness: 1,
+                color: '#286090',
+                dataPoints: dataPoints
+            }];
         }
 
         /**
@@ -123,14 +140,18 @@
 
             vm.loading = true;
 
-            $http.get(API_URL + '/sensori/' + vm.id + '/' + vm.metric + '/' + (channel + 1) + '?start=' + new Date(vm.from).getTime() + '&end=' + new Date(vm.to).getTime() + '&downsample=15m-avg')
+            var url = API_URL + '/sensori/' + vm.id + '/' + vm.metric + '/' + (channel + 1) + '?start=' + parseStart(vm.start) + '&end=' + parseEnd(vm.end);
+
+            console.log(url);
+
+            $http.get(url)
                 .then(function (res) {
                     vm.data = res.data.payload;
 
                     vm.title = labels(vm.metric, channel);
                     vm.channel = channel;
+
                     vm.chartData = updateChartData(vm.data[0]);
-                    vm.initialized();
 
                     console.debug('Fetching smart meter data… Done', vm.data);
                 })
