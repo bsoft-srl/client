@@ -30,7 +30,11 @@
         vm.state = UIState;
         vm.smartMeter = smartMeter;
 
-        vm.aside = false;
+        vm.offsideToggled = false;
+        vm.offsideToggle = function ($evt) {
+            $evt.preventDefault();
+            vm.offsideToggled = !vm.offsideToggled;
+        };
 
         /** */
         vm.panel = panel;

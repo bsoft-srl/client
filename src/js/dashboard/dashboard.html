@@ -21,9 +21,10 @@
         <li ng-if="dashboard.state.selectedUI" ng-class="{active: dashboard.state.panel == 'ui'}" ng-click="dashboard.panel('ui')"><a href="#"><i class="fa fa-database mr"></i>Unit&agrave; <span class="sr-only">(current)</span></a></li>
       </ul>
 
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#" ng-click="dashboard.logout()"><em class="fa fa-sign-out"></em> Esci</a></li>
-      </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="#" ng-click="dashboard.logout()"><em class="fa fa-sign-out"></em> Esci</a></li>
+            <li><a href="#" class="so-toggle so-toggle--offside" ng-click="dashboard.offsideToggle($event)" ng-class="{'active': dashboard.offsideToggled}"><em class="fa fa-list"></em> Edifici</a></li>
+        </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
@@ -31,34 +32,29 @@
 <div class="so-contentWrapper content-wrapper">
     <h3 class="clearfix">
         <span class="pull-left">
+            <small class="text-muted">Bentornato</small><br>
             {{dashboard.utenza.codice_fiscale}}
         </span>
-
-        <button class="pull-right btn btn-default btn-sm" ng-click="dashboard.toggleAside()">
-            <em class="fa fa-list"></em>
-        </button>
-
-        <!--<div class="btn-toolbar pull-right">
-            <div class="btn-group btn-group" role="group" aria-label="">
-                <button type="button" class="btn btn-default" ng-class="{active: dashboard.state.panel == 'home'}" ng-click="dashboard.panel('home')"><em class="fa fa-home mr"></em> Sommario</button>
-                <button type="button" class="btn btn-default" ng-class="{active: dashboard.state.panel == 'building'}" ng-disabled="!dashboard.state.selectedBuilding" ng-click="dashboard.panel('building')"><em class="fa fa-database mr"></em> Edificio</button>
-                <button type="button" class="btn btn-default" ng-class="{active: dashboard.state.panel == 'ui'}" ng-disabled="!dashboard.state.selectedUI" ng-click="dashboard.panel('ui')"><em class="fa fa-database mr"></em> Unit&agrave;</button>
-            </div>
-
-            <div class="btn-group btn-group" role="group" aria-label="">
-                <button type="button" class="btn btn-default" ng-click="dashboard.logout()"><em class="fa fa-sign-out"></em> Esci</button>
-            </div>
-        </div>-->
     </h3>
 
     <div class="row">
 
-        <aside ng-if="dashboard.aside" class="so-aside col-lg-3 col-lg-push-9" ng-class="{'is-loading--noProgress': dashboard.smartMeter.isLoading}">
-            <so-building-panel model="e" sensori="dashboard.sensori" on-select="dashboard.selectUI" ng-repeat="e in dashboard.edifici"></so-building-panel>
-        </aside><!-- aside -->
+        <div class="so-offside" ng-class="{'so-offside--open': dashboard.offsideToggled}">
+            <form class="form-inline mb">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-filter"></i></div>
+                        <input type="text" class="form-control" ng-model="query" placeholder="Indirizzo">
+                    </div>
+                </div>
+            </form>
 
-        <main class="col-lg-12" ng-show="dashboard.state.panel == 'home'">
+            <div class="so-offside__content">
+                <so-building-panel model="e" sensori="dashboard.sensori" on-select="dashboard.selectUI" ng-repeat="e in dashboard.edifici | filter:query | orderBy:'denominazione'"></so-building-panel>
+            </div>
+        </div>
 
+        <main class="col-lg-12" ng-if="dashboard.state.panel == 'home'">
             <div class="row" ng-if="dashboard.state.selectedUI && !dashboard.state.sensori.length">
                 <div class="col-lg-12">
                     <div class="alert alert-warning">Non ci sono sensori da monitorare per questa unità immobiliare</div>
@@ -66,7 +62,6 @@
             </div>
 
             <div class="row animated fadeInDown" ng-if="dashboard.state.sensori.length">
-
                 <div class="col-lg-3 col-md-12">
                     <so-datepicker start="dashboard.start" end="dashboard.end"></so-datepicker>
                 </div>
@@ -126,10 +121,10 @@
             <so-weather></so-weather>
         </main><!-- home -->
 
-        <main class="col-lg-9 col-lg-pull-3" ng-if="dashboard.state.panel == 'building'">
+        <main class="col-lg-12" ng-if="dashboard.state.panel == 'building'">
             <div class="row">
                 <div class="col-lg-12">
-                    <h2>{{dashboard.state.selectedBuilding.denominazione}}</h2>
+                    <!--<h2>{{dashboard.state.selectedBuilding.denominazione}}</h2>
 
                     <iframe
                         height="240"
@@ -140,7 +135,7 @@
                         src="http://www.openstreetmap.org/export/embed.html?bbox=14.355998039245605%2C41.07026837251489%2C14.365010261535645%2C41.07576024606791&amp;layer=mapnik&amp;marker=41.073010322548555%2C14.360504150390625"
                         style="width: 100%"
                         >
-                    </iframe>
+                    </iframe>-->
 
                     <table datatable="ng" dt-options="dashboard.dtOptions" class="table table-striped table-bordered">
                         <thead>
@@ -159,10 +154,10 @@
                 </div>
         </main><!-- building -->
 
-        <main class="col-lg-9 col-lg-pull-3" ng-if="dashboard.state.panel == 'ui'">
+        <main class="col-lg-12" ng-if="dashboard.state.panel == 'ui'">
             <div class="row">
                 <div class="col-lg-12">
-                    <h2>Unit&agrave; #{{dashboard.state.selectedUI.id}}</h2>
+                    <!--<h2>Unit&agrave; #{{dashboard.state.selectedUI.id}}</h2>-->
 
                     <table datatable="ng" dt-options="dashboard.dtOptions" class="table table-striped table-bordered">
                         <thead>

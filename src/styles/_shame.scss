@@ -38,7 +38,7 @@ $ns: "so-";
 }
 
 
-.#{$ns}toggle {
+/*.#{$ns}toggle {
     color: #999;
     position: absolute;
     top: 0;
@@ -49,7 +49,7 @@ $ns: "so-";
     &--extra {
         right: 48px;
     }
-}
+}*/
 
 
 .#{$ns}list-group {
@@ -227,6 +227,7 @@ main {
     color: rgba(#fff, .65);
 }
 
+
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
@@ -275,4 +276,28 @@ main {
 }*/
 
 .#{$ns}aside {
+}
+
+.#{$ns}offside {
+    position: fixed;
+    right: -240px;
+    width: 240px;
+    height: 100%;
+    top: 55px;
+    background: #fff;
+    border-left: 1px solid #ddd;
+    transition: all .3s ease;
+    padding: 12px 12px 95px 12px;
+    z-index: 10;
+
+    &--open {
+        transform: translateX(-240px);
+    }
+
+    &__content {
+        overflow: scroll;
+        //position: absolute;
+        height: 100%;
+        left: 0;
+    }
 }
