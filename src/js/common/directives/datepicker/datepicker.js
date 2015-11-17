@@ -26,10 +26,12 @@
     /**
      *
      */
-     controller.$inject = [];
+    controller.$inject = ['SmartMeterService'];
 
-    function controller() {
+    function controller(smartMeter) {
         var vm = this;
+
+        vm.smartMeter = smartMeter;
     }
 
     /**

@@ -2,26 +2,31 @@
 
     angular
         .module('app.login')
-        .controller('LoginCtrl', LoginCtrl);
+        .controller('LoginCtrl', controller);
 
     /**
      *
      */
-    LoginCtrl.$inject = ['$http', '$state', 'SidecoStore', 'API_URL'];
+    controller.$inject = ['$http', '$state', 'SidecoStore', 'API_URL'];
 
-    function LoginCtrl($http, $state, store, API_URL) {
+    function controller($http, $state, store, API_URL) {
 
         var vm = this;
 
+        /** */
+        vm.resolving = false;
         vm.error = false;
         vm.loading = false;
+
+        /** */
         vm.codiceFiscale = 'DLLNDR73P22B963U';
         vm.password = 'sideco';
 
         vm.login = login;
 
-        ////////
-
+        /**
+         *
+         */
         function login(codiceFiscale, password) {
 
             vm.loading = true;
@@ -33,6 +38,9 @@
             })
             .then(function (res) {
                 store.set('tokenId', res.data.payload);
+
+                vm.resolving = true;
+
                 $state.go('dashboard');
             })
             .catch(function (err) {
@@ -42,7 +50,5 @@
                 vm.loading = false;
             });
         }
-
     }
-
 })();

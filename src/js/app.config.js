@@ -3,7 +3,11 @@
         .module('app')
         .config(config);
 
+    /**
+     *
+     */
     config.$inject = ['jwtInterceptorProvider', '$httpProvider'];
+
     function config(jwtInterceptorProvider, $httpProvider) {
 
         jwtInterceptorProvider.tokenGetter = ['SidecoStore', function (store) {

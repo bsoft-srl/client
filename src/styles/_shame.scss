@@ -1,4 +1,80 @@
 $primary: #23b7e5;
+$danger: #ff902b;
+
+$ns: "so-";
+
+.fa {
+
+    &.is-active {
+        color: $danger;
+    }
+}
+
+.#{$ns}-alert {
+    position: fixed;
+    top: 0;
+    width: 50%;
+    margin-left: -25%;
+}
+
+.#{$ns}u-ctx {
+    position: relative !important;
+}
+
+.#{$ns}building {
+    &--isSelected {
+        border-color: $danger;
+    }
+
+    &__ui {
+        &--isSelected {
+            border-color: $danger;
+        }
+    }
+
+    &--isActive {
+        border-color: $danger;
+    }
+}
+
+
+.#{$ns}toggle {
+    color: #999;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    border: 16px solid transparent;
+
+    &--extra {
+        right: 48px;
+    }
+}
+
+
+.#{$ns}list-group {
+    margin: 0 -15px;
+    padding: 0;
+
+    &__item {
+        list-style: none;
+        border-bottom: 1px solid #eeeeee;
+        padding: 6px 15px;
+
+        &:nth-child(2n) {
+            background-color: rgba(#fff, .45);
+        }
+
+        &:last-child {
+            border: none;
+        }
+    }
+
+    &__icon {
+        color: $danger;
+    }
+}
+
 
 .so-datepicker {
     background: transparent;
@@ -6,9 +82,11 @@ $primary: #23b7e5;
 }
 
 
-.is-loading {
+.is-loading,
+.is-loading--noProgress {
     //opacity: 0.25 !important;
     position: relative;
+    cursor: progress;
 
     &::before {
         content: "";
@@ -20,7 +98,9 @@ $primary: #23b7e5;
         background: rgba(#fff, 0.65);
         z-index: 10;
     }
+}
 
+.is-loading {
     &::after {
         content: "";
         position: absolute;
@@ -118,19 +198,81 @@ $primary: #23b7e5;
     display: none !important;
 }
 
-.canvasjs-chart-toolbar {
-    button[title='Pan'] {
-        display: none !important;
+.tab-content {
+    padding-top: 20px;
+}
+
+main {
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+        background-color: transparent;
     }
 
-    button[title='Reset'] {
-
-        &:before {
-            content: 'Reset';
-        }
-
-        > img {
-            display: none;
-        }
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+        border-bottom-color: #f5f7fa;
     }
+}
+
+
+.#{$ns}contentWrapper {
+    padding-top: 72px;
+}
+
+.#{$ns}navbar {
+    background: $primary;
+    padding: 0 6px;
+    border: none;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: rgba(#fff, .65);
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #fff;
+    background-color: transparent;
+    position: relative;
+}
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus,
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+    color: rgba(#fff, 1);
+    background-color: transparent;
+}
+
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+    background-color: transparent;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: #fff;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #fff;
+}
+
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+    border-color: transparent;
+}
+
+/*
+.navbar-toggle {
+    position: relative;
+    float: right;
+    margin-right: 15px;
+    padding: 9px 10px;
+    margin-top: 10.5px;
+    margin-bottom: 10.5px;
+    background-color: transparent;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}*/
+
+.#{$ns}aside {
 }

@@ -11,11 +11,8 @@
         return {
             restrict: 'E',
             scope: {
-                id: '=',
-                metric: '=',
-                channels: '=',
-                data: '=',
-                initialized: '&',
+                ui: '=',
+                model: '=',
                 start: '=',
                 end: '='
             },
@@ -28,29 +25,32 @@
     /**
      *
      */
-    controller.$inject = ['$scope', '$http', 'API_URL'];
-    function controller($scope, $http, API_URL) {
+    controller.$inject = ['$scope', '$http', 'SmartMeterService', 'API_URL'];
+    function controller($scope, $http, smartMeter, API_URL) {
         var vm = this;
 
-        vm.id = $scope.id;
-        vm.info = $scope.data;
-        vm.metric = $scope.metric;
-        vm.loading = false;
-        vm.refresh = refresh;
+        vm.service = smartMeter;
 
-        /* */
-        vm.channels = _.range($scope.channels);
-        vm.channel = 1;
+        /** */
+        vm.id = $scope.ui;
+        vm.model = $scope.model;
 
-        /* */
+        /** */
         vm.start = $scope.start;
         vm.end = $scope.end;
 
+        /** */
+        vm.channels = _.range(vm.model.numero_canali);
+        vm.channel = 0;
+        vm.metric = vm.model.tipologia;
+        vm.update = update;
+
         /* */
+        vm.title = null;
         vm.chartData = null;
         vm.chartOptions = null;
 
-        //refresh();
+        initialize();
 
         /**
          *
@@ -68,21 +68,54 @@
               return raw ? retval : retval.valueOf();
         }
 
-        vm.init = false;
-
+        /** */
         $scope.$watch('start', function (newvalue, oldvalue) {
-            if (!vm.loading) {
+            if (!vm.isLoading) {
                 vm.start = newvalue;
-                refresh();
+                update(vm.channel);
             }
         });
 
+        /** */
         $scope.$watch('end', function (newvalue, oldvalue) {
-            if (!vm.loading) {
+            if (!vm.isLoading) {
                 vm.end = newvalue;
-                refresh();
+                update(vm.channel);
             }
         });
+
+        /**
+         *
+         */
+        function initialize() {
+            update();
+        }
+
+        /**
+         *
+         */
+        function update(channel) {
+
+            if (channel == undefined)
+                channel = 0;
+
+            vm.isLoading = true;
+
+            smartMeter.fetch(vm.id, {
+                metric: vm.metric,
+                channel: channel,
+                start: parseStart(vm.start),
+                end: parseEnd(vm.end)
+            })
+            .then(function (dps) {
+                vm.chartData = updateChartData(dps);
+                vm.title = getTitle(vm.metric, channel);
+                vm.channel = channel;
+            })
+            .finally(function () {
+                vm.isLoading = false;
+            });
+        }
 
         /**
          *
@@ -90,7 +123,7 @@
         function updateChartData(rows) {
             var dataPoints = [];
 
-            _.each(rows.dps, function (v, k) {
+            _.each(rows, function (v, k) {
                 dataPoints.push({
                     label: moment.unix(k).format('DD MMM YYYY HH:mm'),
                     y: v
@@ -106,10 +139,11 @@
             }];
         }
 
+
         /**
          *
          */
-        function labels(metric, channel) {
+        function getTitle(metric, channel) {
 
             if (metric == 'ambientale') {
                 switch (channel) {
@@ -123,44 +157,6 @@
                     case 1: return 'Energia Reattiva (Kvarh)';
                 }
             }
-        }
-
-        /**
-         *
-         */
-        function refresh(channel) {
-
-            /*if (!force && store.get('weather')) {
-                vm.data = store.get('weather');
-                vm.lineChart = chartTempForecastData(vm.data.previsioni);
-                return;
-            }*/
-
-            channel || (channel = 0);
-
-            vm.loading = true;
-
-            var url = API_URL + '/sensori/' + vm.id + '/' + vm.metric + '/' + (channel + 1) + '?start=' + parseStart(vm.start) + '&end=' + parseEnd(vm.end);
-
-            console.log(url);
-
-            $http.get(url)
-                .then(function (res) {
-                    vm.data = res.data.payload;
-
-                    vm.title = labels(vm.metric, channel);
-                    vm.channel = channel;
-
-                    vm.chartData = updateChartData(vm.data[0]);
-
-                    console.debug('Fetching smart meter data… Done', vm.data);
-                })
-                .catch(function (err) {
-                    vm.error = err.data ? err.data.message : 'Impossibile contattare il server.';
-                })
-                .finally(function () {
-                    vm.loading = false;
-                })
         }
     }
 })();

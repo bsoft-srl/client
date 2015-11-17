@@ -1,18 +1,18 @@
-<div class="row animated fadeInDown" ng-if="weather.data">
+<div class="row animated fadeInDown" ng-if="w.service.model">
     <div class="col-lg-12">
-        <div class="panel widget" ng-class="{'is-loading': weather.loading}">
+        <div class="panel widget" ng-class="{'is-loading': w.service.isLoading}">
            <div class="row row-table">
 
               <div class="col-md-2 col-sm-3 col-xs-6 text-center bg-info pv-xl">
-                  <em class="fa fa-refresh so-weather__refresh hidden-xs" ng-click="weather.refresh(true)"></em>
-                 <em class="wi wi-{{weather.data.attuale.icona}} fa-4x"></em>
+                  <em class="fa fa-refresh so-weather__refresh hidden-xs" ng-click="w.update()"></em>
+                 <em class="wi wi-{{w.service.model.attuale.icona}} fa-4x"></em>
               </div>
               <div class="col-md-2 col-sm-3 col-xs-6 pv br">
-                 <div class="h1 m0 text-bold">{{weather.data.attuale.temperatura}}°</div>
-                 <div class="text-uppercase">{{weather.iconCondition(weather.data.attuale.icona)}}</div>
+                 <div class="h1 m0 text-bold">{{w.service.model.attuale.temperatura}}°</div>
+                 <div class="text-uppercase">{{w.iconCondition(w.service.model.attuale.icona)}}</div>
               </div>
 
-              <div class="col-md-2 col-sm-3 pv text-center" ng-class="{'br': !$last, 'hidden-xs': $index > 2}" ng-repeat="p in weather.data.previsioni.slice(1) | limitTo:(limit-1)">
+              <div class="col-md-2 col-sm-3 pv text-center" ng-class="{'br': !$last, 'hidden-xs': $index > 2}" ng-repeat="p in w.service.model.previsioni.slice(1) | limitTo:(w.limit-1)">
                  <div class="text-info text-sm">{{p.data}}</div>
                  <div class="text-muted text-md">
                     <em class="wi wi-{{p.icona}}"></em>
@@ -36,23 +36,19 @@
         </div>
     </div>
 
-   <div class="col-lg-12" ng-if="weather.canvasData">
-      <div class="panel widget" ng-class="{'is-loading': weather.loading}">
+   <div class="col-lg-12" ng-if="w.chartData">
+      <div class="panel widget" ng-class="{'is-loading': w.service.isLoading}">
         <div class="panel-body">
             <div class="text-info">
                 <em class="wi wi-thermometer fa-2x text-muted pull-right"></em>
-                Andamento previsionale temperature a {{weather.chartData.columns[0].length - 1}} giorni
+                Andamento previsionale temperature a {{w.chartData[0].dataPoints.length}} giorni
             </div>
             <div class="pv-lg">
-                <div
-                    so-canvas="weather.canvasData"
-                    options="weather.canvasOptions"
-                    style="height: 200px; width: 100%"
-                ></div>
+                <div so-chart dps="w.chartData" options="w.chartOptions" style="height: 200px; width: 100%;"></div>
             </div>
         </div>
         <div class="panel-footer">
-            <small class="text-muted">Dati offerti dal servizio meteo <a href="http://www.openweathermap.org">OpenWeatherMap</a>. Risultati aggiornati al {{weather.data.attuale.data}}.</small>
+            <small class="text-muted">Dati offerti dal servizio meteo <a href="http://www.openweathermap.org">OpenWeatherMap</a>. Risultati aggiornati al {{w.service.model.attuale.data}}.</small>
         </div>
       </div>
    </div>

@@ -6,34 +6,83 @@
     /**
      *
      */
-    controller.$inject = ['$rootScope', '$scope', '$state', '$http', 'SidecoStore', 'API_URL'];
+    controller.$inject = [
+        '$scope',
+        'DTOptionsBuilder',
+        'profile',
+        'ProfileService',
+        'SmartMeterService',
+        'SidecoStore',
+        '$state',
+        '$http',
+        'UIStateService',
+        'API_URL'
+    ];
 
-    function controller($rootScope, $scope, $state, $http, store, API_URL) {
+    function controller($scope, DTOptionsBuilder, model, profile, smartMeter, store, $state, $http, UIState, API_URL) {
         var vm = this;
 
-        vm.loading = true;
-        vm.initialized = false;
-        vm.error = false;
-        vm.store = {};
-        vm.smartMeterDidInit = false;
+        /** */
+        vm.utenza = model.utenza;
+        vm.edifici = model.edifici;
+        vm.sensori = model.sensori;
+        vm.profile = profile;
+        vm.state = UIState;
+        vm.smartMeter = smartMeter;
 
-        vm.findByE = findByE;
-        vm.getSmartMeterByUI = getSmartMeterByUI;
-        vm.getWeather = getWeather;
+        vm.aside = false;
+
+        /** */
+        vm.panel = panel;
         vm.logout = logout;
-        vm.smartMeterInitialized = smartMeterInitialized();
 
-        /* */
-        vm.selected = null;
-        vm.select = select;
+        /** */
+        vm.selectedUI = null;
+        vm.selectUI = selectUI;
 
-        /* */
+        /** */
         vm.start = moment().format('DD-MM-YYYY');
         vm.end = moment().format('DD-MM-YYYY');
         vm.parseStart = parseStart;
         vm.parseEnd = parseEnd;
 
+        /** */
+        /*vm.dtOptions = DTOptionsBuilder.newOptions()
+            .withPaginationType('full_numbers')
+            .withDisplayLength(25)
+            .withBootstrap();*/
+
+        vm.dtOptions = {
+            paginationType: 'numbers',
+            displayLength: 25,
+            withBootstrap: true
+        };
+
         initialize();
+
+        vm.toggleAside = function () {
+            vm.aside = !vm.aside;
+        }
+
+        /**
+         *
+         */
+        function initialize() {
+        }
+
+        /**
+         *
+         */
+        function panel(type) {
+            UIState.panel = type;
+        }
+
+        /**
+         *
+         */
+        function selectUI(id) {
+            vm.selectedUI = id;
+        }
 
         /**
          *
@@ -54,31 +103,16 @@
         /**
          *
          */
-        function smartMeterInitialized(count) {
-
-            return function () {
-                if (!count) vm.smartMeterDidInit = true;
-                else (count -= 1);
-            }
-        }
-
-        /**
-         *
-         */
-        function info(arr) {
-            var blacklist = [
-                'parent',
-                'parent_id'
-            ];
-        }
-
-        /**
-         *
-         */
         function logout() {
             store.remove('tokenId');
             store.remove('profile');
             store.remove('weather');
+
+            UIState.selectedUI = null;
+            UIState.selectedBuilding = null;
+            UIState.activeBuilding = null;
+            UIState.sensori = null;
+            UIState.panel = 'home';
 
             $state.go('login');
         }
@@ -86,50 +120,8 @@
         /**
          *
          */
-        function findByE(id) {
-            var retval = _.where(vm.store.unita_immobiliari, {'parent_id': id + ''});
-            return retval;
-        }
-
-        /**
-         *
-         */
-        function getSmartMeterByUI(id) {
-            return _.where(vm.store.sensori, {'parent_id': id});
-        }
-
-        /**
-         *
-         */
         function select(id) {
             vm.selected = id;
-        }
-
-        /**
-         *
-         */
-        function initialize() {
-
-            $http.get(API_URL + '/profilo/me?include=u,ui,e,s,z,de,i')
-                .then(function (res) {
-                    vm.store = res.data.payload;
-                    vm.loading = false;
-                    store.set('profile', vm.store);
-                })
-                .catch(function (err) {
-                    vm.error = err.data ? err.data.message : 'Impossibile contattare il server.';
-                })
-                .finally(function () {
-                    vm.initialized = true;
-                });
-        }
-
-        /**
-         *
-         */
-        function getWeather() {
-            var url = API_URL + '/meteo?include=w,f';
-            return $http.get(url);
         }
     }
 })();

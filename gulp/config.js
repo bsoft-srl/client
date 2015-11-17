@@ -33,18 +33,19 @@ var config = {
                 './bower_components/angular-jwt/dist/angular-jwt.js',
                 './bower_components/bootstrap/dist/js/bootstrap.js',
                 './bower_components/moment/moment.js',
-                './bower_components/d3/d3.js',
-                './bower_components/c3/c3.js',
-                './bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
-                './bower_components/canvasjs-1.8.0-beta2/canvasjs.min.js'
+                './bower_components/canvasjs-1.8.0-beta2/canvasjs.min.js',
+
+                './bower_components/jquery.dataTables.min.js',
+                './bower_components/angular-datatables/dist/angular-datatables.js',
+                './bower_components/angular-datatables/dist/plugins/bootstrap/angular-datatables.bootstrap.min.js'
             ],
 
             css: [
                 './bower_components/bootstrap/dist/css/bootstrap.css',
                 './bower_components/font-awesome/css/font-awesome.css',
                 './bower_components/weather-icons/css/weather-icons.css',
-                './bower_components/c3/c3.css',
-                './bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css'
+                //'./bower_components/jquery.dataTables.min.css',
+                './bower_components/angular-datatables/dist/plugins/bootstrap/datatables.bootstrap.css'
             ]
         }
     }

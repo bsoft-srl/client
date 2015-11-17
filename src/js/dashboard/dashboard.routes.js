@@ -1,20 +1,28 @@
 (function () {
     angular
         .module('app.dashboard')
-        .config(Config);
+        .config(config);
 
     /**
      *
      */
-    Config.$inject = ['$stateProvider'];
+    config.$inject = ['$stateProvider'];
 
-    function Config($stateProvider) {
+    function config($stateProvider) {
         $stateProvider
             .state('dashboard', {
                 url: '/dashboard',
                 templateUrl: 'dashboard/dashboard.html',
                 controller: 'DashboardCtrl',
                 controllerAs: 'dashboard',
+                resolve: {
+                    profile: function (ProfileService) {
+                        return ProfileService.fetch();
+                    },
+                    WeatherService: function (WeatherService) {
+                        return WeatherService.fetch();
+                    }
+                },
                 data: {
                     private: true
                 }

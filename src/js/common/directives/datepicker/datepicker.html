@@ -1,10 +1,10 @@
-<div class="panel widget bg-purple">
+<div class="panel widget bg-purple" ng-class="{'is-loading': dp.smartMeter.isLoading}">
     <div class="row row-table">
         <div class="col-xs-4 text-center bg-purple-dark pv-lg">
             <em class="fa fa-calendar fa-3x"></em>
         </div>
         <div class="col-xs-8 pv-lg">
-            <input class="so-datepicker so-datepicker--start h2 m0 text-bold" type="text" ng-model="start" placeholder="Inizio">
+            <input class="so-datepicker so-datepicker--start h3 m0 text-bold" type="text" ng-model="start" placeholder="Inizio">
             <input class="so-datepicker so-datepicker--end" type="text" ng-model="end" placeholder="Fine">
         </div>
     </div>

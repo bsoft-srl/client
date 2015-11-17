@@ -2,7 +2,7 @@
 
     angular
         .module('app')
-        .directive('soCanvas', directive);
+        .directive('soChart', directive);
 
     /**
      *
@@ -12,7 +12,7 @@
         return {
             restrict: 'A',
             scope: {
-                dataPoints: '=soCanvas',
+                dataPoints: '=dps',
                 options: '='
             },
             link: link
@@ -37,6 +37,10 @@
             });
 
             chart = new CanvasJS.Chart(el[0], {
+
+                animationEnabled: true,
+                zoomEnabled: true,
+
                 axisY: {
                     includeZero: false,
                     gridDashType: 'dash',
@@ -51,6 +55,7 @@
                     labelFontFamily: 'Helvetica',
                     labelFontSize: 10
                 },
+
                 axisX: {
                     lineColor: '#333',
                     lineThickness: 1,
@@ -58,21 +63,26 @@
                     tickColor: '#333',
                     labelFontColor: '#333',
                     labelFontFamily: 'Helvetica',
-                    labelFontSize: 10
+                    labelFontSize: 10,
                 },
+
                 toolTip: {
                     borderThickness: 1,
                     cornerRadius: 0,
                     borderColor: '#999',
                     shared: true,
+                    backgroundColor: null,
+                    data: scope.dataPoints,
+
+                    /**
+                     *
+                     */
                     contentFormatter: function (e) {
                         var retval = [
                             '<div class="so-chart__tooltip">'
                         ];
 
                         var doneTitle = false;
-
-                        //console.log(e);
 
                         for (var i = 0; i < e.entries.length; i += 1) {
 
@@ -98,10 +108,7 @@
                         retval.push('</div>');
                         return retval.join('');
                     }
-                },
-                backgroundColor: null,
-                zoomEnabled: true,
-                data: scope.dataPoints
+                }
             });
 
 

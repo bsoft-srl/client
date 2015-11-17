@@ -1,100 +1,184 @@
-<div class="so-overlay" ng-class="{'so-overlay--error': dashboard.error}" ng-show="dashboard.loading"></div>
+<nav class="so-navbar navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
 
-<div class="content-wrapper">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#so-navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">
+          <em class="fa fa-pie-chart"></em> Dashboard
+      </a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="so-navbar-collapse">
+
+      <ul class="nav navbar-nav">
+        <li ng-class="{active: dashboard.state.panel == 'home'}" ng-click="dashboard.panel('home')"><a href="#"><i class="fa fa-home mr"></i>Sommario <span class="sr-only">(current)</span></a></li>
+        <li ng-if="dashboard.state.selectedBuilding" ng-class="{active: dashboard.state.panel == 'building'}" ng-click="dashboard.panel('building')"><a href="#"><i class="fa fa-database mr"></i> Edificio <span class="sr-only">(current)</span></a></li>
+        <li ng-if="dashboard.state.selectedUI" ng-class="{active: dashboard.state.panel == 'ui'}" ng-click="dashboard.panel('ui')"><a href="#"><i class="fa fa-database mr"></i>Unit&agrave; <span class="sr-only">(current)</span></a></li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" ng-click="dashboard.logout()"><em class="fa fa-sign-out"></em> Esci</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+<div class="so-contentWrapper content-wrapper">
     <h3 class="clearfix">
         <span class="pull-left">
-            <em class="fa fa-pie-chart"></em> Dashboard
+            {{dashboard.utenza.codice_fiscale}}
         </span>
 
-        <div class="btn-toolbar pull-right">
-            <div class="btn-group btn-group-sm" role="group" aria-label="">
+        <button class="pull-right btn btn-default btn-sm" ng-click="dashboard.toggleAside()">
+            <em class="fa fa-list"></em>
+        </button>
+
+        <!--<div class="btn-toolbar pull-right">
+            <div class="btn-group btn-group" role="group" aria-label="">
+                <button type="button" class="btn btn-default" ng-class="{active: dashboard.state.panel == 'home'}" ng-click="dashboard.panel('home')"><em class="fa fa-home mr"></em> Sommario</button>
+                <button type="button" class="btn btn-default" ng-class="{active: dashboard.state.panel == 'building'}" ng-disabled="!dashboard.state.selectedBuilding" ng-click="dashboard.panel('building')"><em class="fa fa-database mr"></em> Edificio</button>
+                <button type="button" class="btn btn-default" ng-class="{active: dashboard.state.panel == 'ui'}" ng-disabled="!dashboard.state.selectedUI" ng-click="dashboard.panel('ui')"><em class="fa fa-database mr"></em> Unit&agrave;</button>
+            </div>
+
+            <div class="btn-group btn-group" role="group" aria-label="">
                 <button type="button" class="btn btn-default" ng-click="dashboard.logout()"><em class="fa fa-sign-out"></em> Esci</button>
             </div>
-        </div>
+        </div>-->
     </h3>
 
-
     <div class="row">
-        <aside class="col-lg-3 col-lg-push-9">
 
-            <div class="panel panel-default" ng-if="dashboard.store.edifici" ng-repeat="e in dashboard.store.edifici">
-                <div class="panel-heading">
-                    <div class="panel-title">{{e.denominazione}}</div>
-                    <small class="text-muted">{{e.indirizzo}} {{e.civico}}</small>
+        <aside ng-if="dashboard.aside" class="so-aside col-lg-3 col-lg-push-9" ng-class="{'is-loading--noProgress': dashboard.smartMeter.isLoading}">
+            <so-building-panel model="e" sensori="dashboard.sensori" on-select="dashboard.selectUI" ng-repeat="e in dashboard.edifici"></so-building-panel>
+        </aside><!-- aside -->
+
+        <main class="col-lg-12" ng-show="dashboard.state.panel == 'home'">
+
+            <div class="row" ng-if="dashboard.state.selectedUI && !dashboard.state.sensori.length">
+                <div class="col-lg-12">
+                    <div class="alert alert-warning">Non ci sono sensori da monitorare per questa unità immobiliare</div>
                 </div>
-
-                <div class="panel-body">
-                    <div class="list-group mb0">
-                        <a href="#" class="list-group-item" ng-click="dashboard.select(ui.id)" ng-repeat="ui in dashboard.findByE(e.id)">
-                            <span class="label label-warning pull-right">{{dashboard.getSmartMeterByUI(ui.id).length}}</span>
-                            <em class="fa fa-home mr"></em>{{ui.id}}
-                        </a>
-                    </div>
-                </div>
-
-                <!--<div class="panel-footer">
-                    FOOTER
-                </div>-->
             </div>
 
-        </aside>
-        <main class="col-lg-9 col-lg-pull-3">
-            <div class="row animated fadeInDown" ng-if="dashboard.selected">
-                <div class="col-lg-4 col-md-12">
-                    <div class="panel widget bg-success">
+            <div class="row animated fadeInDown" ng-if="dashboard.state.sensori.length">
+
+                <div class="col-lg-3 col-md-12">
+                    <so-datepicker start="dashboard.start" end="dashboard.end"></so-datepicker>
+                </div>
+
+                <div class="col-lg-3 col-md-12">
+                    <div class="panel widget bg-danger">
                         <div class="row row-table">
-                            <div class="col-xs-4 text-center bg-success-dark pv-lg">
-                                <em class="fa fa-home fa-3x"></em>
+                            <div class="col-xs-4 text-center bg-danger-dark pv-lg">
+                                <em class="fa fa-fire fa-3x"></em>
                             </div>
                             <div class="col-xs-8 pv-lg">
-                                <div class="h2 m0 text-bold">{{dashboard.selected}}</div>
-                                <div class="text-uppercase">Numero Contatore</div>
+                                <div class="h2 m0 text-bold">0</div>
+                                <div class="text-uppercase">Consumi Gas</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-md-12">
+                <div class="col-lg-3 col-md-12">
+                    <div class="panel widget bg-info">
+                        <div class="row row-table">
+                            <div class="col-xs-4 text-center bg-info-dark pv-lg">
+                                <em class="fa fa-tint fa-3x"></em>
+                            </div>
+                            <div class="col-xs-8 pv-lg">
+                                <div class="h2 m0 text-bold">0</div>
+                                <div class="text-uppercase">Consumi Idrici</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-12">
                     <div class="panel widget bg-warning">
                         <div class="row row-table">
                             <div class="col-xs-4 text-center bg-warning-dark pv-lg">
-                                <em class="fa fa-plug fa-3x"></em>
+                                <em class="fa fa-bolt fa-3x"></em>
                             </div>
                             <div class="col-xs-8 pv-lg">
-                                <div class="h2 m0 text-bold">{{dashboard.store.sensori.length}}</div>
-                                <div class="text-uppercase">Numero Sensori</div>
+                                <div class="h2 m0 text-bold">0</div>
+                                <div class="text-uppercase">Consumi Elettrici</div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-12">
-                    <so-datepicker start="dashboard.start" end="dashboard.end"></so-datepicker>
-                </div>
-            </div>
-
-            <div class="row" ng-if="dashboard.selected && !dashboard.smartMeterDidInit && dashboard.startsss && dashboard.end">
-                <div class="col-lg-12">
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: 100%">
-                        <span class="sr-only">Loading…</span>
-                      </div>
                     </div>
                 </div>
             </div>
 
             <so-smart-meter
-                id="dashboard.selected"
-                data="sm"
-                metric="sm.tipologia"
+                ui="dashboard.state.selectedUI.id"
+                model="sm"
                 start="dashboard.start"
                 end="dashboard.end"
-                channels="sm.numero_canali"
-                ng-repeat="sm in dashboard.store.sensori"
-                ng-if="dashboard.selected && dashboard.start && dashboard.end">
+                ng-repeat="sm in dashboard.state.sensori"
+                ng-if="dashboard.state.selectedUI && dashboard.start && dashboard.end">
             </so-smart-meter>
 
-            <so-weather fetch="dashboard.getWeather()" limit="5"></so-weather>
-        </main>
+            <so-weather></so-weather>
+        </main><!-- home -->
+
+        <main class="col-lg-9 col-lg-pull-3" ng-if="dashboard.state.panel == 'building'">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>{{dashboard.state.selectedBuilding.denominazione}}</h2>
+
+                    <iframe
+                        height="240"
+                        frameborder="0"
+                        scrolling="no"
+                        marginheight="0"
+                        marginwidth="0"
+                        src="http://www.openstreetmap.org/export/embed.html?bbox=14.355998039245605%2C41.07026837251489%2C14.365010261535645%2C41.07576024606791&amp;layer=mapnik&amp;marker=41.073010322548555%2C14.360504150390625"
+                        style="width: 100%"
+                        >
+                    </iframe>
+
+                    <table datatable="ng" dt-options="dashboard.dtOptions" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Chiave</th>
+                                <th>Valore</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="row in dashboard.state.selectedBuilding.parsed">
+                                <td>{{row.k}}</td>
+                                <td>{{row.v}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </main><!-- building -->
+
+        <main class="col-lg-9 col-lg-pull-3" ng-if="dashboard.state.panel == 'ui'">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>Unit&agrave; #{{dashboard.state.selectedUI.id}}</h2>
+
+                    <table datatable="ng" dt-options="dashboard.dtOptions" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Chiave</th>
+                                <th>Valore</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="row in dashboard.state.selectedUI.parsed">
+                                <td>{{row.k}}</td>
+                                <td>{{row.v}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </main><!-- ui -->
     </div>
 </div>
