@@ -1,43 +1,18 @@
 <div class="so-building panel panel-default" ng-class="{'so-building--isActive': e.active}">
-    <div class="so-u-ctx panel-heading">
+    <div class="panel-heading">
         <div class="panel-title">{{e.model.denominazione}}</div>
         <small class="text-muted">{{e.model.indirizzo}} {{e.model.civico}}</small>
-        <!--<i class="so-toggle fa" ng-class="{'fa-folder': !e.toggled, 'fa-folder-open': e.toggled}"></i>-->
     </div>
 
-    <!--<iframe
-        height="150"
-        frameborder="0"
-        scrolling="no"
-        marginheight="0"
-        marginwidth="0"
-        src="http://www.openstreetmap.org/export/embed.html?bbox=14.355998039245605%2C41.07026837251489%2C14.365010261535645%2C41.07576024606791&amp;layer=mapnik&amp;marker=41.073010322548555%2C14.360504150390625"
-        style="width: 100%"
-        ng-show="e.toggled"
-        >
-    </iframe>-->
-
     <div class="panel-body">
-        <ul class="list-group">
-            <li class="list-group-item" ng-repeat="ui in e.ui" ng-click="e.selectUI(ui.id)">
+        <div class="list-group">
+            <button type="button" class="list-group-item" ng-repeat="ui in e.ui" ng-click="e.selectUI(ui.id)">
                 <em class="so-list-group__icon fa fa-eye mr" ng-if="ui.id == e.state.selectedUI.id"></em>
                 <span class="text-muted mr" ng-if="ui.id != e.state.selectedUI.id">{{$index + 1}}</span>
                 {{ui.id}}
                  <span class="badge pull-right bg-warning">{{e.sensoriCount[ui.id] || 0}}</span>
-            </li>
-        </ul>
-
-        <!--<ul class="nav nav-tabs h6">
-            <li class="active">
-                <a href="#"><em class="fa fa-home"></em></a>
-            </li>
-        </ul>
-
-        <div class="tab-content">
-            <div class="tab-pane active">
-
-            </div>
-        </div>-->
+            </button>
+        </div>
     </div>
 
 </div>

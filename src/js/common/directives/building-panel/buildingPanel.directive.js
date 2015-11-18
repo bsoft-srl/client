@@ -68,19 +68,13 @@
                     vm.ui = rows;
                 });
 
-            console.error('Initialized…');
-
             vm.sensoriCount = {};
             _.each(vm.sensori, function (row) {
-
                 if (!vm.sensoriCount[row.parent_id]) {
                     vm.sensoriCount[row.parent_id] = 0;
                 }
-
                 vm.sensoriCount[row.parent_id] += 1;
             });
-
-            console.log(vm.sensoriCount);
         }
 
         /**

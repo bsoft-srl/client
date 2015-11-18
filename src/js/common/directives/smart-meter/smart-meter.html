@@ -16,16 +16,20 @@
                           {{c == 0 ? 'Canale' : ''}} {{c + 1}}
                       </button>
                     </div>
+                    
+                    <div class="btn-group btn-group-sm" role="group" aria-label="canali">
+                        <button type="button" class="btn btn-default" ng-class="{active: sm.toggled}" ng-click="sm.toggle()"><i class="fa fa-database"></i></button>
+                    </div>
                 </div>
             </div>
 
             <div class="panel-body">
                 <div class="pv-lg">
-                    <div so-chart dps="sm.chartData" options="sm.chartOptions" style="height: 200px; width: 100%"></div>
+                    <div so-chart dps="sm.chartData" options="sm.chartOptions" style="height: 200px"></div>
                 </div>
             </div>
 
-            <div class="panel-footer">
+            <div class="panel-footer" ng-show="sm.toggled">
                 <ul class="list-inline">
                     <li><span class="label label-info">MAC</span> {{sm.model.mac_address}}</li>
                     <li><span class="label label-info">DATALOGGER</span> {{sm.model.mac_address_datalogger}}</li>

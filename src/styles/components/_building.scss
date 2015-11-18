@@ -1,0 +1,15 @@
+.#{$ns}building {
+    &--isSelected {
+        border-color: $danger;
+    }
+
+    &__ui {
+        &--isSelected {
+            border-color: $danger;
+        }
+    }
+
+    &--isActive {
+        border-color: $danger;
+    }
+}

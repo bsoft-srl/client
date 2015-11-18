@@ -2,28 +2,36 @@
   <div class="container-fluid">
 
     <div class="navbar-header">
+
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#so-navbar-collapse" aria-expanded="false">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">
+
+      <button type="button" class="so-toggle--offsideResp btn btn-outline pull-right" ng-click="dashboard.offsideToggle()">
+          <span class="fa fa-list-alt"></span>
+      </button>
+
+
+      <div class="navbar-brand">
           <em class="fa fa-pie-chart"></em> Dashboard
-      </a>
+      </div>
     </div>
 
     <div class="collapse navbar-collapse" id="so-navbar-collapse">
 
       <ul class="nav navbar-nav">
-        <li ng-class="{active: dashboard.state.panel == 'home'}" ng-click="dashboard.panel('home')"><a href="#"><i class="fa fa-home mr"></i>Sommario <span class="sr-only">(current)</span></a></li>
-        <li ng-if="dashboard.state.selectedBuilding" ng-class="{active: dashboard.state.panel == 'building'}" ng-click="dashboard.panel('building')"><a href="#"><i class="fa fa-database mr"></i> Edificio <span class="sr-only">(current)</span></a></li>
-        <li ng-if="dashboard.state.selectedUI" ng-class="{active: dashboard.state.panel == 'ui'}" ng-click="dashboard.panel('ui')"><a href="#"><i class="fa fa-database mr"></i>Unit&agrave; <span class="sr-only">(current)</span></a></li>
+        <li ng-class="{active: dashboard.state.panel == 'home'}" ng-click="dashboard.panel('home')"><a><i class="fa fa-home mr"></i> Sommario</a></li>
+        <li ng-class="{active: dashboard.state.panel == 'usage'}" ng-click="dashboard.panel('usage')"><a><i class="fa fa-eur mr"></i> Consumi</a></li>
+        <li ng-class="{active: dashboard.state.panel == 'building'}" ng-click="dashboard.panel('building')" ng-if="dashboard.state.selectedBuilding"><a><i class="fa fa-database mr"></i> Edificio</a></li>
+        <li ng-class="{active: dashboard.state.panel == 'ui'}" ng-click="dashboard.panel('ui')" ng-if="dashboard.state.selectedUI"><a><i class="fa fa-database mr"></i> Unit&agrave;</a></li>
       </ul>
 
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="#" ng-click="dashboard.logout()"><em class="fa fa-sign-out"></em> Esci</a></li>
-            <li><a href="#" class="so-toggle so-toggle--offside" ng-click="dashboard.offsideToggle($event)" ng-class="{'active': dashboard.offsideToggled}"><em class="fa fa-list"></em> Edifici</a></li>
+            <li><a ng-click="dashboard.logout()"><em class="fa fa-sign-out mr"></em> Esci</a></li>
+            <li><a class="so-toggle so-toggle--offside" ng-click="dashboard.offsideToggle()" ng-class="{'so-toggle--isActive': dashboard.offsideToggled}"><em class="fa fa-list-alt mr"></em> Edifici</a></li>
         </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
@@ -121,7 +129,14 @@
             <so-weather></so-weather>
         </main><!-- home -->
 
-        <main class="col-lg-12" ng-if="dashboard.state.panel == 'building'">
+        <main class="col-lg-12" ng-show="dashboard.state.panel == 'usage'">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>IT WORKS!</h1>
+                </div>
+        </main><!-- eur -->
+
+        <main class="col-lg-12" ng-show="dashboard.state.panel == 'building'">
             <div class="row">
                 <div class="col-lg-12">
                     <!--<h2>{{dashboard.state.selectedBuilding.denominazione}}</h2>
@@ -154,7 +169,7 @@
                 </div>
         </main><!-- building -->
 
-        <main class="col-lg-12" ng-if="dashboard.state.panel == 'ui'">
+        <main class="col-lg-12" ng-show="dashboard.state.panel == 'ui'">
             <div class="row">
                 <div class="col-lg-12">
                     <!--<h2>Unit&agrave; #{{dashboard.state.selectedUI.id}}</h2>-->

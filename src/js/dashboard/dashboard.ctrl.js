@@ -31,8 +31,7 @@
         vm.smartMeter = smartMeter;
 
         vm.offsideToggled = false;
-        vm.offsideToggle = function ($evt) {
-            $evt.preventDefault();
+        vm.offsideToggle = function () {
             vm.offsideToggled = !vm.offsideToggled;
         };
 
@@ -51,22 +50,39 @@
         vm.parseEnd = parseEnd;
 
         /** */
-        /*vm.dtOptions = DTOptionsBuilder.newOptions()
-            .withPaginationType('full_numbers')
-            .withDisplayLength(25)
-            .withBootstrap();*/
-
         vm.dtOptions = {
             paginationType: 'numbers',
             displayLength: 25,
+            lengthChange: false,
+            info: false,
+            language: {
+                "decimal":        "",
+                "emptyTable":     "Nessun risultato da visualizzare.",
+                "info":           "Showing _START_ to _END_ of _TOTAL_ entries",
+                "infoEmpty":      "Showing 0 to 0 of 0 entries",
+                "infoFiltered":   "(filtered from _MAX_ total entries)",
+                "infoPostFix":    "",
+                "thousands":      ",",
+                "lengthMenu":     "Show _MENU_ entries",
+                "loadingRecords": "Caricamento…",
+                "processing":     "Elaborazione…",
+                "search":         "<i class='fa fa-filter mr'></i>Filtro:",
+                "zeroRecords":    "Il filtro non ha restituito alcun risultato.",
+                "paginate": {
+                    "first":      "Primo",
+                    "last":       "Ultimo",
+                    "next":       "Prossimo",
+                    "previous":   "Precedente"
+                },
+                "aria": {
+                    "sortAscending":  ": activate to sort column ascending",
+                    "sortDescending": ": activate to sort column descending"
+                }
+            },
             withBootstrap: true
         };
 
         initialize();
-
-        vm.toggleAside = function () {
-            vm.aside = !vm.aside;
-        }
 
         /**
          *
@@ -79,6 +95,7 @@
          */
         function panel(type) {
             UIState.panel = type;
+            vm.offsideToggled = false;
         }
 
         /**

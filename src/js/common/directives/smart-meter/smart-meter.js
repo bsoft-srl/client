@@ -50,7 +50,19 @@
         vm.chartData = null;
         vm.chartOptions = null;
 
+        /** */
+        vm.toggled = false;
+        vm.toggle = toggle;
+
         initialize();
+
+        /**
+         *
+         */
+        function toggle() {
+            vm.toggled = !vm.toggled;
+        }
+
 
         /**
          *

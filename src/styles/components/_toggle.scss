@@ -1,0 +1,35 @@
+.#{$ns}toggle {
+
+    &--isActive {
+        color: #fff !important;
+    }
+
+    &--offside {
+        display: none !important;
+    }
+
+    &--offsideResp {
+        margin-top: 11px;
+        margin-right: 12px;
+        color: #fff;
+
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: transparent;
+            color: #fff;
+        }
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .#{$ns}toggle {
+        &--offside {
+            display: block !important;
+        }
+
+        &--offsideResp {
+            display: none;
+        }
+    }
+}
