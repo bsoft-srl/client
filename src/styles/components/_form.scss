@@ -1,0 +1,57 @@
+.#{$ns}form {
+    &__input {
+        border: none;
+        width: 100%;
+        display: block;
+        padding: 12px;
+        font-size: 18px;
+    }
+
+    &__group {
+        border: 6px solid #eee;
+        border-radius: 6px;
+        margin-bottom: 12px;
+        position: relative;
+
+        &--isError {
+            border-color: red;
+        }
+    }
+
+    &__group > &__input {
+        border-bottom: 1px solid #eee;
+
+        &:last-child {
+            border: none;
+        }
+    }
+
+    &__alert {
+        position: absolute;
+        bottom: 100%;
+        width: 100%;
+        margin-bottom: 21px;
+
+        > span {
+            padding: 6px;
+            border-radius: 6px;
+            position: relative;
+        }
+
+
+
+        &--error {
+
+            > span {
+                color: red;
+                background-color: rgba(#fff, 100);
+                border: 2px solid red;
+            }
+
+
+
+        }
+    }
+
+    &--login {}
+}
