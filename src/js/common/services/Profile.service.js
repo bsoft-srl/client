@@ -22,16 +22,20 @@
             isError: false,
 
             /** */
+            getUtenza: getUtenza,
+
+            /** */
             getEdificioById: getEdificioById,
             getUIByEdificioId: getUIByEdificioId,
             getSensoriByUI: getSensoriByUI,
+            getGeoJson: getGeoJson,
             extraInfo: extraInfo
         };
 
         /**
          *
          */
-        function fetch(force) {
+        function _fetch(force) {
             var
                 model = {},
                 d = $q.defer();
@@ -62,10 +66,10 @@
         /**
          *
          */
-        function _fetch(force) {
+        function fetch(force) {
 
             var
-                url = API_URL + '/profilo/me?include=u,ui,e,s,z,de,i,c',
+                url = API_URL + '/profilo/me?include=u,ui,e,s,z,de,i,c,g',
                 cachedModel = store.get('profile'),
                 model = {},
                 d = $q.defer();
@@ -96,6 +100,16 @@
                 });
 
             return d.promise;
+        }
+
+        /**
+         *
+         */
+        function getUtenza() {
+            return fetch()
+                .then(function (model) {
+                    return $q.resolve(model.utenza);
+                });
         }
 
         /**
@@ -136,6 +150,16 @@
         /**
          *
          */
+        function getGeoJson(featureType) {
+            return fetch()
+                .then(function (model) {
+                    return model.geo ? model.geo[featureType] : false;
+                });
+        }
+
+        /**
+         *
+         */
         function getUIById(id) {
 
         }
@@ -157,7 +181,9 @@
                 '$$hashKey',
                 'id',
                 'parent',
-                'parent_id'
+                'parent_id',
+                'latLon',
+                'consumi'
             );
 
             _.each(model, function (v, k) {

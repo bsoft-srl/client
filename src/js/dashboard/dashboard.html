@@ -1,3 +1,11 @@
+<ul class="so-alert-group" ng-if="dashboard.state.errors.length">
+    <li class="so-alert so-alert--error" ng-repeat="alert in dashboard.state.errors track by $index">
+        <div ng-click="dashboard.dismissAlert(alert)">
+            {{alert.text}}
+        </div>
+    </li>
+</ul>
+
 <nav class="so-navbar navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
 
@@ -16,7 +24,7 @@
 
 
       <div class="navbar-brand">
-          <em class="fa fa-pie-chart"></em> Dashboard
+          <em class="fa fa-dashboard"></em> Dashboard
       </div>
     </div>
 
@@ -24,14 +32,14 @@
 
       <ul class="nav navbar-nav">
         <li ng-class="{active: dashboard.state.panel == 'home'}" ng-click="dashboard.panel('home')"><a><i class="fa fa-home mr"></i> Sommario</a></li>
-        <li ng-class="{active: dashboard.state.panel == 'usage'}" ng-click="dashboard.panel('usage')"><a><i class="fa fa-eur mr"></i> Consumi</a></li>
         <li ng-class="{active: dashboard.state.panel == 'building'}" ng-click="dashboard.panel('building')" ng-if="dashboard.state.selectedBuilding"><a><i class="fa fa-database mr"></i> Edificio</a></li>
         <li ng-class="{active: dashboard.state.panel == 'ui'}" ng-click="dashboard.panel('ui')" ng-if="dashboard.state.selectedUI"><a><i class="fa fa-database mr"></i> Unit&agrave;</a></li>
+        <li ng-class="{active: dashboard.state.panel == 'usage'}" ng-click="dashboard.panel('usage')" ng-if="dashboard.state.selectedUI"><a><i class="fa fa-eur mr"></i> Consumi</a></li>
       </ul>
 
         <ul class="nav navbar-nav navbar-right">
-            <li><a ng-click="dashboard.logout()"><em class="fa fa-sign-out mr"></em> Esci</a></li>
             <li><a class="so-toggle so-toggle--offside" ng-click="dashboard.offsideToggle()" ng-class="{'so-toggle--isActive': dashboard.offsideToggled}"><em class="fa fa-list-alt mr"></em> Edifici</a></li>
+            <li><a ng-click="dashboard.logout()"><em class="fa fa-sign-out mr"></em> Esci</a></li>
         </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
@@ -132,25 +140,34 @@
         <main class="col-lg-12" ng-show="dashboard.state.panel == 'usage'">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1>IT WORKS!</h1>
+                    <div class="so-table-wrap clearfix" ng-if="dashboard.state.selectedUI" ng-repeat="(k, table) in dashboard.parsed">
+                    <table
+                        datatable="ng"
+                        dt-options="dashboard.dtOptions"
+                        class="table table-striped table-bordered"
+                    >
+                        <thead>
+                            <tr>
+                                <th ng-repeat="th in table.th">{{th}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="tr in table.tr">
+                                <td ng-repeat="td in tr">
+                                    {{td}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
                 </div>
         </main><!-- eur -->
 
-        <main class="col-lg-12" ng-show="dashboard.state.panel == 'building'">
+        <main class="col-lg-12" ng-if="dashboard.state.panel == 'building'">
             <div class="row">
                 <div class="col-lg-12">
-                    <!--<h2>{{dashboard.state.selectedBuilding.denominazione}}</h2>
 
-                    <iframe
-                        height="240"
-                        frameborder="0"
-                        scrolling="no"
-                        marginheight="0"
-                        marginwidth="0"
-                        src="http://www.openstreetmap.org/export/embed.html?bbox=14.355998039245605%2C41.07026837251489%2C14.365010261535645%2C41.07576024606791&amp;layer=mapnik&amp;marker=41.073010322548555%2C14.360504150390625"
-                        style="width: 100%"
-                        >
-                    </iframe>-->
+                    <so-map></so-map>
 
                     <table datatable="ng" dt-options="dashboard.dtOptions" class="table table-striped table-bordered">
                         <thead>

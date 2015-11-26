@@ -26,14 +26,74 @@
         vm.utenza = model.utenza;
         vm.edifici = model.edifici;
         vm.sensori = model.sensori;
+        vm.consumi = model.consumi;
         vm.profile = profile;
         vm.state = UIState;
         vm.smartMeter = smartMeter;
+        vm.dismissAlert = dismissAlert;
 
         vm.offsideToggled = false;
         vm.offsideToggle = function () {
             vm.offsideToggled = !vm.offsideToggled;
         };
+
+        /**
+         * TODO: ottimizzare, rendere generica
+         */
+        vm.parsed = {};
+
+        $scope.$watch(function () {
+            return UIState.selectedUI && UIState.selectedUI.consumi;
+        }, function (newvalue) {
+            vm.parsed = prepareTable(newvalue);
+        });
+
+        function parseTh(th) {
+            var parts = th.split('_');
+
+            /** */
+            function capitalize(s){
+                return s.toLowerCase().replace(/\b./g, function(a) {
+                    return a.toUpperCase();
+                });
+            };
+
+            parts = _.map(parts, function (part) {
+                return capitalize(part);
+            });
+
+            return parts.join(' ');
+        }
+
+        /**
+         *
+         */
+        function prepareTable(target) {
+            var table = {};
+
+            _.each(target, function (collection, k) {
+                table[k] = {
+                    th: [],
+                    tr: []
+                };
+
+                _.each(collection, function (model, th) {
+                    var row = [];
+
+                    _.each(model, function (td, th) {
+                        th = parseTh(th);
+
+                        if (table[k].th.indexOf(th) == -1) table[k].th.push(th);
+                        row.push(td);
+                    });
+
+                    table[k].tr.push(row);
+
+                });
+            });
+
+            return table;
+        }
 
         /** */
         vm.panel = panel;
@@ -96,6 +156,7 @@
         function panel(type) {
             UIState.panel = type;
             vm.offsideToggled = false;
+            vm.state.errors = [];
         }
 
         /**
@@ -143,6 +204,14 @@
          */
         function select(id) {
             vm.selected = id;
+        }
+
+        /**
+         *
+         */
+        function dismissAlert(alert) {
+            var index = UIState.errors.indexOf(alert);
+            UIState.errors.splice(index, 1);
         }
     }
 })();

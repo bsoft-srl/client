@@ -46,7 +46,8 @@
                 dateFormat: 'dd-mm-yy',
                 changeMonth: true,
                 maxDate: 'today'
-            };
+            },
+            now = moment().format('DD-MM-YYYY');
 
         $start.datepicker(_.extend(sharedOpts, {
             onClose: function (date) {
@@ -55,6 +56,7 @@
         }));
 
         $end.datepicker(_.extend(sharedOpts, {
+            minDate: now,
             onClose: function (date) {
                 $start.datepicker('option', 'maxDate', date);
             }

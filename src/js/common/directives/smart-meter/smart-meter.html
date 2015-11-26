@@ -16,7 +16,7 @@
                           {{c == 0 ? 'Canale' : ''}} {{c + 1}}
                       </button>
                     </div>
-                    
+
                     <div class="btn-group btn-group-sm" role="group" aria-label="canali">
                         <button type="button" class="btn btn-default" ng-class="{active: sm.toggled}" ng-click="sm.toggle()"><i class="fa fa-database"></i></button>
                     </div>
@@ -33,6 +33,7 @@
                 <ul class="list-inline">
                     <li><span class="label label-info">MAC</span> {{sm.model.mac_address}}</li>
                     <li><span class="label label-info">DATALOGGER</span> {{sm.model.mac_address_datalogger}}</li>
+                    <li><span class="label label-info">ULTIMO AGGIORNAMENTO</span> {{sm.lastUpdate}}</li>
                 </ul>
             </div>
         </div>
