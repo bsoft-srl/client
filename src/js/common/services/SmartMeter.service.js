@@ -6,9 +6,9 @@
     /**
      *
      */
-    factory.$inject = ['$http', '$q', 'SidecoStore', 'API_URL'];
+    factory.$inject = ['$http', '$q', 'SidecoStore', 'UIStateService', 'API_URL'];
 
-    function factory($http, $q, store, API_URL) {
+    function factory($http, $q, store, UIStateService, API_URL) {
 
         var retval;
 
@@ -56,7 +56,10 @@
                     return d.resolve(dps);
                 })
                 .catch(function (err) {
-                    retval.isError = err.data ? err.data.message : 'Impossibile contattare il server.';
+                    retval.isError = err.data ? 'MISURATORE ' + opts.metric.toUpperCase() + ': ' + err.data.message : 'Impossibile contattare il server.';
+                    UIStateService.errors.push({
+                        text: retval.isError
+                    });
                 })
                 .finally(function () {
                     retval.isLoading = false;

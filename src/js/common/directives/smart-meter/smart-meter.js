@@ -34,6 +34,7 @@
         /** */
         vm.id = $scope.ui;
         vm.model = $scope.model;
+        vm.lastUpdate = moment.unix(vm.model.ultimo_aggiornamento).format('DD MMM YYYY HH:mm');
 
         /** */
         vm.start = $scope.start;

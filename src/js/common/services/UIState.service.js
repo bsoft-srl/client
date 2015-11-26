@@ -10,8 +10,13 @@
             selectedUI: null,
             selectedBuilding: null,
             activeBuilding: null,
-            panel: 'home'
+            panel: 'home',
+            errors: [
+                //{text: 'Errore'},
+            ]
         }
+
+        /** */
     }
 
 })();

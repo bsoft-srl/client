@@ -2,6 +2,57 @@
     position: relative !important;
 }
 
+
+.so-table-wrap {
+    margin-bottom: 72px;
+}
+
+.so-alert-group {
+    position: fixed;
+    top: 0;
+    width: 240px;
+    left: 50%;
+    margin-left: -120px;
+    color: #fff;
+    z-index: 9999;
+    text-align: center;
+
+    > .#{$ns}alert {
+        box-shadow: 0 0 15px rgba(#000, .45);
+        list-style: none;
+        display: block;
+        margin: 0 auto 3px;
+        font-size: 18px;
+
+        > div {
+            padding: 6px;
+        }
+    }
+}
+
+.#{$ns}alert {
+    position: relative;
+
+    &--error {
+        background-color: red;
+    }
+
+    &__dismiss {
+        cursor: pointer;
+        position: absolute;
+        height: 24px;
+        width: 24px;
+        line-height: 24px;
+        text-align: center;
+        top: 0;
+        right: -24px;
+        background: red;
+    }
+}
+
+
+
+
 .is-loading,
 .is-loading--noProgress {
     //opacity: 0.25 !important;
@@ -51,4 +102,9 @@
     &.is-active {
         color: $danger;
     }
+}
+
+
+.so-map {
+    margin: -20px -20px 20px -20px;
 }
