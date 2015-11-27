@@ -2,6 +2,15 @@
     position: relative !important;
 }
 
+.so-nodps {
+    position: absolute;
+    z-index: 10;
+    top: 50%;
+    margin-top: -24px;
+    width: 100%;
+    text-align: center;
+    left: 0;
+}
 
 .so-table-wrap {
     margin-bottom: 72px;
@@ -37,16 +46,13 @@
         background-color: red;
     }
 
-    &__dismiss {
-        cursor: pointer;
-        position: absolute;
-        height: 24px;
-        width: 24px;
-        line-height: 24px;
-        text-align: center;
-        top: 0;
-        right: -24px;
-        background: red;
+    &__title {
+        font-size: 12px;
+        text-transform: uppercase;
+        background: rgba(#000, .25);
+        color: rgba(#fff, .45);
+        margin: -6px -6px 6px;
+        padding: 6px;
     }
 }
 

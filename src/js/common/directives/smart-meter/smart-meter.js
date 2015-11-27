@@ -30,6 +30,7 @@
         var vm = this;
 
         vm.service = smartMeter;
+        vm.dataPointsSize = 0;
 
         /** */
         vm.id = $scope.ui;
@@ -43,8 +44,31 @@
         /** */
         vm.channels = _.range(vm.model.numero_canali);
         vm.channel = 0;
+        vm.downsample = false;
         vm.metric = vm.model.tipologia;
         vm.update = update;
+        vm.downsamples = [
+            {
+                desc: '15M-AVG',
+                downsample: '15m-avg'
+            },
+            {
+                desc: '30M-AVG',
+                downsample: '30m-avg'
+            },
+            {
+                desc: '1H-AVG',
+                downsample: '1h-avg'
+            },
+            {
+                desc: '1D-AVG',
+                downsample: '1d-avg'
+            },
+            {
+                desc: 'Nessuno',
+                downsample: false
+            }
+        ];
 
         /* */
         vm.title = null;
@@ -107,23 +131,44 @@
         /**
          *
          */
-        function update(channel) {
+        function update(channel, downsample) {
+            var
+                start = parseStart(vm.start),
+                end = parseEnd(vm.end),
+                mStart = moment(vm.start, 'DD-MM-YYYY'),
+                mEnd = moment(vm.end, 'DD-MM-YYYY'),
+                mDiff = mEnd.diff(mStart, 'days');
 
             if (channel == undefined)
                 channel = 0;
+
+            if (downsample == undefined)
+                if (mDiff > 42)
+                    downsample = '1d-avg';
+                else if (mDiff > 28)
+                    downsample = '1h-avg';
+                else if (mDiff > 14)
+                    downsample = '30m-avg';
+                else if (mDiff > 7)
+                    downsample = '15m-avg'
+                else
+                    downsample = false;
 
             vm.isLoading = true;
 
             smartMeter.fetch(vm.id, {
                 metric: vm.metric,
                 channel: channel,
-                start: parseStart(vm.start),
-                end: parseEnd(vm.end)
+                downsample: downsample,
+                start: start,
+                end: end
             })
             .then(function (dps) {
+                vm.dataPointsSize = _.size(dps);
                 vm.chartData = updateChartData(dps);
                 vm.title = getTitle(vm.metric, channel);
                 vm.channel = channel;
+                vm.downsample = downsample;
             })
             .finally(function () {
                 vm.isLoading = false;

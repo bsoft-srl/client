@@ -6,9 +6,9 @@
     /**
      *
      */
-    factory.$inject = ['$http', '$q', 'SidecoStore', 'API_URL'];
+    factory.$inject = ['$http', '$q', 'UIStateService', 'SidecoStore', 'API_URL'];
 
-    function factory($http, $q, store, API_URL) {
+    function factory($http, $q, UIStateService, store, API_URL) {
 
         var retval = {};
 
@@ -16,7 +16,7 @@
         return retval = {
 
             fetch: fetch,
-            
+
             /** */
             isLoading: false,
             isError: false,
@@ -56,6 +56,11 @@
                 })
                 .catch(function (err) {
                     retval.isError = err.data ? err.data.message : 'Impossibile contattare il server.';
+
+                    UIStateService.errors.push({
+                        title: 'OpenWeatherMap',
+                        text: retval.isError
+                    });
                 })
                 .finally(function () {
                     retval.isLoading = false;

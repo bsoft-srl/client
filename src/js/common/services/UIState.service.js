@@ -7,16 +7,18 @@
     factory.$inject = [];
     function factory() {
         return {
+            offsideToggled: false,
             selectedUI: null,
             selectedBuilding: null,
             activeBuilding: null,
             panel: 'home',
             errors: [
-                //{text: 'Errore'},
+                /*{
+                    title: '',
+                    text: ''
+                },*/
             ]
         }
-
-        /** */
     }
 
 })();

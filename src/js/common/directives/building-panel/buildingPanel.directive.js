@@ -95,6 +95,8 @@
             (UIState.selectedUI && delete UIState.selectedUI.parsed);
             (UIState.selectedBuilding && delete UIState.selectedBuilding.parsed);
 
+            UIState.offsideToggled = false;
+
             profile.getSensoriByUI(id)
                 .then(function (collection) {
                     UIState.sensori = collection;
@@ -107,7 +109,6 @@
                 UIState.activeBuilding = vm.model.id + '';
                 UIState.selectedBuilding = vm.model;
                 UIState.selectedBuilding.parsed = profile.extraInfo(vm.model);
-
             }
         }
 

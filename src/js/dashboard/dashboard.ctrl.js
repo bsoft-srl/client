@@ -31,11 +31,8 @@
         vm.state = UIState;
         vm.smartMeter = smartMeter;
         vm.dismissAlert = dismissAlert;
+        vm.offsideToggle = offsideToggle;
 
-        vm.offsideToggled = false;
-        vm.offsideToggle = function () {
-            vm.offsideToggled = !vm.offsideToggled;
-        };
 
         /**
          * TODO: ottimizzare, rendere generica
@@ -115,7 +112,25 @@
             displayLength: 25,
             lengthChange: false,
             info: false,
+
             language: {
+
+            },
+            withBootstrap: true,
+            withDOM: 't'
+        };
+
+        vm.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"panel-heading clearfix"f>t<"panel-footer clearfix"p>')
+            .withBootstrap()
+            .withBootstrapOptions({
+                pagination: {
+                    classes: {
+                        ul: 'pagination pagination-sm'
+                    }
+                }
+            })
+            .withLanguage({
                 "decimal":        "",
                 "emptyTable":     "Nessun risultato da visualizzare.",
                 "info":           "Showing _START_ to _END_ of _TOTAL_ entries",
@@ -138,9 +153,7 @@
                     "sortAscending":  ": activate to sort column ascending",
                     "sortDescending": ": activate to sort column descending"
                 }
-            },
-            withBootstrap: true
-        };
+            });
 
         initialize();
 
@@ -155,7 +168,7 @@
          */
         function panel(type) {
             UIState.panel = type;
-            vm.offsideToggled = false;
+            UIState.offsideToggled = false;
             vm.state.errors = [];
         }
 
@@ -164,6 +177,13 @@
          */
         function selectUI(id) {
             vm.selectedUI = id;
+        }
+
+        /**
+         *
+         */
+        function offsideToggle() {
+            UIState.offsideToggled = !UIState.offsideToggled;
         }
 
         /**

@@ -11,26 +11,37 @@
                             class="btn btn-default"
                             ng-class="{'active': sm.channel == c}"
                             ng-repeat="c in sm.channels"
-                            ng-click="sm.update(c)"
+                            ng-click="sm.update(c, sm.downsample)"
                         >
                           {{c == 0 ? 'Canale' : ''}} {{c + 1}}
                       </button>
                     </div>
 
                     <div class="btn-group btn-group-sm" role="group" aria-label="canali">
-                        <button type="button" class="btn btn-default" ng-class="{active: sm.toggled}" ng-click="sm.toggle()"><i class="fa fa-database"></i></button>
+                        <button type="button" class="btn btn-default" ng-class="{active: sm.toggled}" ng-click="sm.toggle()"><i class="fa fa-database mr"></i> Dettagli</button>
                     </div>
                 </div>
             </div>
 
             <div class="panel-body">
-                <div class="pv-lg">
+                <div class="pv-lg" style="position: relative">
+                    <div class="so-nodps" ng-if="!sm.dataPointsSize">
+                        Nessun dato restituito per il periodo selezionato.
+                    </div>
                     <div so-chart dps="sm.chartData" options="sm.chartOptions" style="height: 200px"></div>
                 </div>
             </div>
 
             <div class="panel-footer" ng-show="sm.toggled">
                 <ul class="list-inline">
+                    <li><span class="label label-info">DATA POINTS</span> {{sm.dataPointsSize}}
+                        <span class="btn-group dropup" ng-if="sm.downsamples">
+                            <button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">Downsample <i class="fa fa-caret-up ml"></i></button>
+                            <ul class="dropdown-menu">
+                                <li ng-class="{'active': d.downsample == sm.downsample}" ng-repeat="d in sm.downsamples"><a ng-click="sm.update(sm.channel, d.downsample)">{{d.desc}}</a></li>
+                            </ul>
+                        </span>
+                    </li>
                     <li><span class="label label-info">MAC</span> {{sm.model.mac_address}}</li>
                     <li><span class="label label-info">DATALOGGER</span> {{sm.model.mac_address_datalogger}}</li>
                     <li><span class="label label-info">ULTIMO AGGIORNAMENTO</span> {{sm.lastUpdate}}</li>

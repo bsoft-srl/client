@@ -21,6 +21,7 @@
             link: function ($scope, $element, $attrs) {
                 var
                     map = L.map($element[0]),
+                    marker = L.marker().addTo(map),
                     layer = L.geoJson(null, {
                         /**
                          *
@@ -86,8 +87,13 @@
                         })
                     });
 
-                map.setView(UIStateService.selectedBuilding.latLon, 15);
-                L.marker(UIStateService.selectedBuilding.latLon).addTo(map);
+                $scope.$watch(function () {
+                    return UIStateService.selectedBuilding.latLon;
+                }, function (newvalue) {
+                    marker.setLatLng(newvalue);
+                    map.setView(newvalue, 15);
+                });
+
             }
         }
     }
