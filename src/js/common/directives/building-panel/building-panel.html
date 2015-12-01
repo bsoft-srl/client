@@ -1,11 +1,15 @@
 <div class="so-building panel panel-default" ng-class="{'so-building--isActive': e.active}">
     <div class="panel-heading">
-        <div class="panel-title">{{e.model.denominazione}}</div>
+        <h3 class="panel-title">
+            <i class="fa fa-warning text-muted pull-right" ng-show="!e.ui"></i>
+            <i class="fa fa-close pull-right" ng-click="e.unselectUI()" ng-show="e.active"></i>
+            {{e.model.denominazione}}
+        </h3>
         <small class="text-muted">{{e.model.indirizzo}} {{e.model.civico}}</small>
     </div>
 
     <div class="panel-body">
-        <div class="list-group">
+        <div class="list-group" ng-if="e.ui">
             <button type="button" class="list-group-item" ng-repeat="ui in e.ui" ng-click="e.selectUI(ui.id)">
                 <em class="so-list-group__icon fa fa-eye mr" ng-if="ui.id == e.state.selectedUI.id"></em>
                 <span class="text-muted mr" ng-if="ui.id != e.state.selectedUI.id">{{$index + 1}}</span>
@@ -13,6 +17,7 @@
                  <span class="badge pull-right bg-warning">{{e.sensoriCount[ui.id] || 0}}</span>
             </button>
         </div>
+        <small ng-show="!e.ui" class="text-muted">Nessuna unit&agrave; monitorata.</small>
     </div>
 
 </div>

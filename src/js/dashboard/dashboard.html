@@ -1,6 +1,7 @@
 <ul class="so-alert-group" ng-if="dashboard.state.errors.length">
     <li class="so-alert so-alert--error" ng-repeat="alert in dashboard.state.errors track by $index">
         <div ng-click="dashboard.dismissAlert(alert)">
+            <div class="so-alert__title" ng-if="alert.title">{{alert.title}}</div>
             {{alert.text}}
         </div>
     </li>
@@ -12,7 +13,6 @@
     <div class="navbar-header">
 
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#so-navbar-collapse" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -22,7 +22,6 @@
           <span class="fa fa-list-alt"></span>
       </button>
 
-
       <div class="navbar-brand">
           <em class="fa fa-dashboard"></em> Dashboard
       </div>
@@ -31,14 +30,14 @@
     <div class="collapse navbar-collapse" id="so-navbar-collapse">
 
       <ul class="nav navbar-nav">
-        <li ng-class="{active: dashboard.state.panel == 'home'}" ng-click="dashboard.panel('home')"><a><i class="fa fa-home mr"></i> Sommario</a></li>
-        <li ng-class="{active: dashboard.state.panel == 'building'}" ng-click="dashboard.panel('building')" ng-if="dashboard.state.selectedBuilding"><a><i class="fa fa-database mr"></i> Edificio</a></li>
-        <li ng-class="{active: dashboard.state.panel == 'ui'}" ng-click="dashboard.panel('ui')" ng-if="dashboard.state.selectedUI"><a><i class="fa fa-database mr"></i> Unit&agrave;</a></li>
-        <li ng-class="{active: dashboard.state.panel == 'usage'}" ng-click="dashboard.panel('usage')" ng-if="dashboard.state.selectedUI"><a><i class="fa fa-eur mr"></i> Consumi</a></li>
+        <li ng-class="{active: dashboard.isPanel('home')}" ng-click="dashboard.panel('home')"><a><i class="fa fa-area-chart mr"></i> Sommario</a></li>
+        <li ng-class="{active: dashboard.isPanel('building')}" ng-click="dashboard.panel('building')" ng-if="dashboard.state.selectedBuilding"><a><i class="fa fa-building mr"></i> Edificio</a></li>
+        <li ng-class="{active: dashboard.isPanel('ui')}" ng-click="dashboard.panel('ui.index')" ng-if="dashboard.state.selectedUI"><a><i class="fa fa-home mr"></i> Unit&agrave;</a></li>
+        <li ng-class="{active: dashboard.isPanel('usage')}" ng-click="dashboard.panel('usage')" ng-if="dashboard.state.selectedUI && dashboard.u.size(dashboard.state.selectedUI.consumi)"><a><i class="fa fa-archive mr"></i> Consumi</a></li>
       </ul>
 
         <ul class="nav navbar-nav navbar-right">
-            <li><a class="so-toggle so-toggle--offside" ng-click="dashboard.offsideToggle()" ng-class="{'so-toggle--isActive': dashboard.offsideToggled}"><em class="fa fa-list-alt mr"></em> Edifici</a></li>
+            <li ng-if="dashboard.u.size(dashboard.edifici)"><a class="so-toggle so-toggle--offside" ng-click="dashboard.offsideToggle()" ng-class="{'so-toggle--isActive': dashboard.state.offsideToggled}"><em class="fa fa-list-alt mr"></em> Edifici</a></li>
             <li><a ng-click="dashboard.logout()"><em class="fa fa-sign-out mr"></em> Esci</a></li>
         </ul>
     </div><!-- /.navbar-collapse -->
@@ -55,7 +54,7 @@
 
     <div class="row">
 
-        <div class="so-offside" ng-class="{'so-offside--open': dashboard.offsideToggled}">
+        <div class="so-offside" ng-class="{'so-offside--open': dashboard.state.offsideToggled}">
             <form class="form-inline mb">
                 <div class="form-group">
                     <div class="input-group">
@@ -70,7 +69,7 @@
             </div>
         </div>
 
-        <main class="col-lg-12" ng-if="dashboard.state.panel == 'home'">
+        <main class="col-lg-12" ng-if="dashboard.isPanel('home')">
             <div class="row" ng-if="dashboard.state.selectedUI && !dashboard.state.sensori.length">
                 <div class="col-lg-12">
                     <div class="alert alert-warning">Non ci sono sensori da monitorare per questa unità immobiliare</div>
@@ -134,78 +133,129 @@
                 ng-if="dashboard.state.selectedUI && dashboard.start && dashboard.end">
             </so-smart-meter>
 
-            <so-weather></so-weather>
+            <so-weather ng-if="dashboard.weather"></so-weather>
         </main><!-- home -->
 
-        <main class="col-lg-12" ng-show="dashboard.state.panel == 'usage'">
+        <main class="col-lg-12" ng-show="dashboard.isPanel('usage')">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="so-table-wrap clearfix" ng-if="dashboard.state.selectedUI" ng-repeat="(k, table) in dashboard.parsed">
-                    <table
-                        datatable="ng"
-                        dt-options="dashboard.dtOptions"
-                        class="table table-striped table-bordered"
-                    >
-                        <thead>
-                            <tr>
-                                <th ng-repeat="th in table.th">{{th}}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="tr in table.tr">
-                                <td ng-repeat="td in tr">
-                                    {{td}}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="panel panel-primary clearfix" ng-if="dashboard.state.selectedUI" ng-repeat="(k, table) in dashboard.parsed">
+                        <h3 class="panel-title pull-left pv ph"><i class="fa fa-archive mr"></i>{{k}}</h3>
+                        <table
+                            datatable="ng"
+                            dt-options="dashboard.dtOptions"
+                            class="table table-striped"
+                        >
+                            <thead>
+                                <tr>
+                                    <th ng-repeat="th in table.th">{{th}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="tr in table.tr">
+                                    <td ng-repeat="td in tr">
+                                        {{td}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
                     </div>
                 </div>
         </main><!-- eur -->
 
-        <main class="col-lg-12" ng-if="dashboard.state.panel == 'building'">
+        <main class="col-lg-12" ng-if="dashboard.isPanel('building')">
             <div class="row">
                 <div class="col-lg-12">
 
                     <so-map></so-map>
 
-                    <table datatable="ng" dt-options="dashboard.dtOptions" class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Chiave</th>
-                                <th>Valore</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="row in dashboard.state.selectedBuilding.parsed">
-                                <td>{{row.k}}</td>
-                                <td>{{row.v}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="panel panel-primary clearfix">
+                        <h3 class="panel-title pull-left pv ph"><i class="fa fa-building mr"></i>{{dashboard.state.selectedBuilding.denominazione}}</h3>
+                        <table datatable="ng" dt-options="dashboard.dtOptions" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Chiave</th>
+                                    <th>Valore</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="row in dashboard.state.selectedBuilding.parsed">
+                                    <td>{{row.k}}</td>
+                                    <td>{{row.v}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
         </main><!-- building -->
 
-        <main class="col-lg-12" ng-show="dashboard.state.panel == 'ui'">
+        <main class="col-lg-12" ng-show="dashboard.isPanel('ui')">
             <div class="row">
                 <div class="col-lg-12">
-                    <!--<h2>Unit&agrave; #{{dashboard.state.selectedUI.id}}</h2>-->
+                    <ol class="breadcrumb breadcrumb-so">
+                      <li><a ng-click="dashboard.panel('ui.index')" ng-class="{'active': dashboard.isPanel('ui.index')}"><i class="fa fa-home mr"></i>Unit&agrave; Immobiliare</a></li>
+                      <li ng-show="dashboard.state.selectedUI.dispositivi_elettrici"><a ng-click="dashboard.panel('ui.devices')" ng-class="{'active': dashboard.isPanel('ui.devices')}"><i class="fa fa-plug mr"></i>Dispositivi Elettrici</a></li>
+                      <li ng-show="dashboard.state.selectedUI.zone"><a ng-click="dashboard.panel('ui.zones')" ng-class="{'active': dashboard.isPanel('ui.zones')}"><i class="fa fa-cubes mr"></i>Zone</a></li>
+                    </ol>
 
-                    <table datatable="ng" dt-options="dashboard.dtOptions" class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Chiave</th>
-                                <th>Valore</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="row in dashboard.state.selectedUI.parsed">
-                                <td>{{row.k}}</td>
-                                <td>{{row.v}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="panel panel-primary clearfix" ng-show="dashboard.isPanel('ui.index')">
+                        <h3 class="panel-title pull-left pv ph"><i class="fa fa-home mr"></i>{{dashboard.state.selectedUI.id}}</h3>
+                        <table datatable="ng" dt-options="dashboard.dtOptions" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Chiave</th>
+                                    <th>Valore</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="row in dashboard.state.selectedUI.parsed">
+                                    <td>{{row.k}}</td>
+                                    <td>{{row.v}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div ng-show="dashboard.isPanel('ui.devices')" class="row">
+                        <div class="col-sm-3" ng-repeat="d in dashboard.state.selectedUI.dispositivi_elettrici">
+                            <div class="panel panel-success">
+                                <div class="panel-heading clearfix">
+                                    <h3 class="panel-title">
+                                        <span class="badge pull-right" title="Conteggio">{{d.conteggio}}</span>
+                                        <i class="fa fa-plug mr"></i> {{d.tipologia}}
+                                    </h3>
+                                </div>
+
+                                <ul class="list-group list-group-so">
+                                    <li class="list-group-item"><span class="text-muted">POTENZA</span>&nbsp;{{d.potenza_nominale_w || 0}} watt</li>
+                                    <li class="list-group-item"><span class="text-muted">MODALIT&Agrave; UTILIZZO</span>&nbsp;{{d.modalita_utilizzo_h_g || 0}} h/giorno</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-show="dashboard.isPanel('ui.zones')" class="row">
+                        <div class="col-sm-3" ng-repeat="z in dashboard.state.selectedUI.zone">
+                            <div class="panel panel-success">
+                                <div class="panel-heading clearfix">
+                                    <h3 class="panel-title">
+                                        <span class="badge pull-right" title="Conteggio">{{z.conteggio}}</span>
+                                        <i class="fa fa-cube mr"></i> {{z.tipologia || 'ID #' + z.id}}
+                                    </h3>
+                                </div>
+
+                                <ul class="list-group list-group-so">
+                                    <li class="list-group-item"><span class="text-muted">SUPERFICIE</span>&nbsp;{{z.superficie_mq || 0}} m<sup>2</sup></li>
+                                    <li class="list-group-item"><span class="text-muted">TIPOLOGIA TELAIO INFISSI</span> {{z.infissi.tipologia_telaio}}</li>
+                                    <li class="list-group-item"><span class="text-muted">TIPOLOGIA VETRO INFISSI</span> {{z.infissi.tipologia_vetro}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+            </div>
         </main><!-- ui -->
     </div>
 </div>

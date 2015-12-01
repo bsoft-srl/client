@@ -6,9 +6,9 @@
     /**
      *
      */
-    factory.$inject = ['$http', '$q', 'SidecoStore', 'API_URL'];
+    factory.$inject = ['$http', '$q', 'UIStateService', 'SidecoStore', 'API_URL'];
 
-    function factory($http, $q, store, API_URL) {
+    function factory($http, $q, UIStateService, store, API_URL) {
 
         var retval;
 
@@ -46,15 +46,20 @@
 
             $http.get('profile.json')
                 .then(function (res) {
-                    model = res.data;
+                    model = res.data.payload;
                     store.set('profile', model);
 
-                    console.debug('Getting json… Done');
+                    console.debug('Fetching profile… Done');
 
                     return d.resolve(model);
                 })
                 .catch(function (err) {
                     retval.isError = err.data ? err.data.message : 'Impossibile contattare il server.';
+
+                    UIStateService.errors.push({
+                        title: 'Profile',
+                        text: retval.isError
+                    });
                 })
                 .finally(function () {
                     retval.isLoading = false;
@@ -69,7 +74,7 @@
         function fetch(force) {
 
             var
-                url = API_URL + '/profilo/me?include=u,ui,e,s,z,de,i,c,g',
+                url = API_URL + '/profilo/me?include=ui,e,s,z,de,i,g',
                 cachedModel = store.get('profile'),
                 model = {},
                 d = $q.defer();
@@ -94,6 +99,11 @@
                 })
                 .catch(function (err) {
                     retval.isError = err.data ? err.data.message : 'Impossibile contattare il server.';
+
+                    UIStateService.errors.push({
+                        title: 'Profile',
+                        text: retval.isError
+                    });
                 })
                 .finally(function () {
                     retval.isLoading = false;
@@ -183,7 +193,9 @@
                 'parent',
                 'parent_id',
                 'latLon',
-                'consumi'
+                'consumi',
+                'dispositivi_elettrici',
+                'zone'
             );
 
             _.each(model, function (v, k) {

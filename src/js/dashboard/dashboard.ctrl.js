@@ -10,6 +10,7 @@
         '$scope',
         'DTOptionsBuilder',
         'profile',
+        'weather',
         'ProfileService',
         'SmartMeterService',
         'SidecoStore',
@@ -19,23 +20,54 @@
         'API_URL'
     ];
 
-    function controller($scope, DTOptionsBuilder, model, profile, smartMeter, store, $state, $http, UIState, API_URL) {
+    function controller($scope, DTOptionsBuilder, model, weather, profile, smartMeter, store, $state, $http, UIState, API_URL) {
         var vm = this;
 
         /** */
         vm.utenza = model.utenza;
         vm.edifici = model.edifici;
         vm.sensori = model.sensori;
-        vm.consumi = model.consumi;
+        vm.dispositiviElettrici = model.dispositivi_elettrici;
+        vm.zone = model.zone;
+
         vm.profile = profile;
         vm.state = UIState;
         vm.smartMeter = smartMeter;
         vm.dismissAlert = dismissAlert;
+        vm.offsideToggle = offsideToggle;
+        vm.weather = weather;
 
-        vm.offsideToggled = false;
-        vm.offsideToggle = function () {
-            vm.offsideToggled = !vm.offsideToggled;
-        };
+        console.log(model);
+
+        /** */
+        vm.u = {};
+        vm.u.size = _.size;
+
+        /**
+         * Filtra i dispositivi elettrici in base all'unità selezionata
+         */
+         $scope.$watchCollection(function () {
+             if (UIState.selectedUI) {
+                 return _.filter(model.dispositivi_elettrici, function (model) {
+                     return model.parent_id == UIState.selectedUI.id;
+                 });
+             }
+         }, function (newvalue) {
+             if (newvalue && _.size(newvalue)) UIState.selectedUI.dispositivi_elettrici = newvalue;
+         });
+
+         /**
+          * Filtra le zone in base all'unità selezionata
+          */
+          $scope.$watchCollection(function () {
+              if (UIState.selectedUI) {
+                  return _.filter(model.zone, function (model) {
+                      return model.parent_id == UIState.selectedUI.id;
+                  });
+              }
+          }, function (newvalue) {
+              if (newvalue && _.size(newvalue)) UIState.selectedUI.zone = newvalue;
+          });
 
         /**
          * TODO: ottimizzare, rendere generica
@@ -96,7 +128,8 @@
         }
 
         /** */
-        vm.panel = panel;
+        vm.panel = UIState.setPanel;
+        vm.isPanel = UIState.isPanel;
         vm.logout = logout;
 
         /** */
@@ -110,12 +143,17 @@
         vm.parseEnd = parseEnd;
 
         /** */
-        vm.dtOptions = {
-            paginationType: 'numbers',
-            displayLength: 25,
-            lengthChange: false,
-            info: false,
-            language: {
+        vm.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"panel-heading clearfix"f>t<"panel-footer clearfix"p>')
+            .withBootstrap()
+            .withBootstrapOptions({
+                pagination: {
+                    classes: {
+                        ul: 'pagination pagination-sm'
+                    }
+                }
+            })
+            .withLanguage({
                 "decimal":        "",
                 "emptyTable":     "Nessun risultato da visualizzare.",
                 "info":           "Showing _START_ to _END_ of _TOTAL_ entries",
@@ -138,9 +176,7 @@
                     "sortAscending":  ": activate to sort column ascending",
                     "sortDescending": ": activate to sort column descending"
                 }
-            },
-            withBootstrap: true
-        };
+            });
 
         initialize();
 
@@ -148,15 +184,7 @@
          *
          */
         function initialize() {
-        }
-
-        /**
-         *
-         */
-        function panel(type) {
-            UIState.panel = type;
-            vm.offsideToggled = false;
-            vm.state.errors = [];
+            console.log(model);
         }
 
         /**
@@ -164,6 +192,13 @@
          */
         function selectUI(id) {
             vm.selectedUI = id;
+        }
+
+        /**
+         *
+         */
+        function offsideToggle() {
+            UIState.offsideToggled = !UIState.offsideToggled;
         }
 
         /**

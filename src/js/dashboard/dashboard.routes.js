@@ -19,7 +19,7 @@
                     profile: function (ProfileService) {
                         return ProfileService.fetch();
                     },
-                    WeatherService: function (WeatherService) {
+                    weather: function (WeatherService) {
                         return WeatherService.fetch();
                     }
                 },
