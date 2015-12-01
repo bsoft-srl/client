@@ -40,6 +40,7 @@
         vm.selectedUI = null;
         vm.selected = false;
         vm.selectUI = selectUI;
+        vm.unselectUI = unselectUI;
 
         /** */
         vm.active = false;
@@ -65,7 +66,7 @@
         function initialize() {
             profile.getUIByEdificioId(vm.model.id)
                 .then(function (rows) {
-                    vm.ui = rows;
+                    vm.ui = rows.length ? rows : false;
                 });
 
             vm.sensoriCount = {};
@@ -109,7 +110,20 @@
                 UIState.activeBuilding = vm.model.id + '';
                 UIState.selectedBuilding = vm.model;
                 UIState.selectedBuilding.parsed = profile.extraInfo(vm.model);
+
+                if (UIState.isPanel('ui')) UIState.setPanel('ui.index');
             }
+        }
+
+        /**
+         *
+         */
+        function unselectUI() {
+            UIState.selectedUI = null;
+            UIState.activeBuilding = null;
+            UIState.selectedBuilding = null;
+
+            UIState.setPanel('home');
         }
 
         /**

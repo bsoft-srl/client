@@ -43,6 +43,9 @@
 
             opts = _.extend(defaults, opts);
 
+            /** */
+            if (!opts.metric) d.resolve();
+
             url += id + '/' + opts.metric + '/' + (opts.channel + 1) + '?start=' + startOfDay(opts.start) + '&end=' + endOfDay(opts.end);
 
             if (opts.downsample) url += '&downsample=' + opts.downsample;
@@ -60,10 +63,14 @@
                 })
                 .catch(function (err) {
                     retval.isError = err.data ? err.data.message : 'Impossibile contattare il server.';
+
+                    /** */
                     UIStateService.errors.push({
                         title: opts.metric.toUpperCase(),
                         text: retval.isError
                     });
+
+                    return d.reject(err);
                 })
                 .finally(function () {
                     retval.isLoading = false;

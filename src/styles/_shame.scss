@@ -2,6 +2,18 @@
     position: relative !important;
 }
 
+.breadcrumb-so {
+    background: transparent;
+
+    .active {
+        color: #555;
+    }
+}
+
+.panel > .list-group-so .list-group-item {
+    border-top: 1px solid #e4eaec;
+}
+
 .so-nodps {
     position: absolute;
     z-index: 10;

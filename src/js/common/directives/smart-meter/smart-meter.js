@@ -44,9 +44,11 @@
         /** */
         vm.channels = _.range(vm.model.numero_canali);
         vm.channel = 0;
-        vm.downsample = false;
         vm.metric = vm.model.tipologia;
         vm.update = update;
+
+        /** */
+        vm.downsample = false;
         vm.downsamples = [
             {
                 desc: '15M-AVG',
@@ -170,6 +172,9 @@
                 vm.channel = channel;
                 vm.downsample = downsample;
             })
+            .catch(function (err) {
+                console.error('Error fetching smart meter data', err);
+            })
             .finally(function () {
                 vm.isLoading = false;
             });
@@ -189,7 +194,7 @@
             });
 
             return [{
-                type: 'area',
+                type: _.size(dataPoints) == 1 ? 'scatter' : 'area',
                 fillOpacity: .25,
                 lineThickness: 1,
                 color: '#286090',
@@ -213,6 +218,29 @@
                 switch (channel) {
                     case 0: return 'Energia Elettrica (KWh)';
                     case 1: return 'Energia Reattiva (Kvarh)';
+                }
+            } else if (metric == 'ambientale_out_2ch') {
+                switch (channel) {
+                    case 0: return 'Temperatura (°C)';
+                    case 1: return 'Umidità (%Rh)'
+                }
+            } else if (metric == 'ambientale_out_3ch') {
+                switch (channel) {
+                    case 0: return 'Temperatura (°C)';
+                    case 1: return 'Temperatura (°C)';
+                    case 2: return 'Temperatura (°C)';
+                }
+            } else if (metric == 'ambientale_out_meteo_3ch') {
+                switch (channel) {
+                    case 0: return 'Meteo / Radiazione solare W/m2';
+                    case 1: return 'Meteo / Direzione °';
+                    case 2: return 'Meteo / Velocità m/s';
+                }
+            } else if (metric == 'produzione') {
+                switch (channel) {
+                    case 0: return 'Produzione / Temperatura (°C)';
+                    case 1: return 'Produzione / Corrente A';
+                    case 2: return 'Produzione / Tensione V';
                 }
             }
         }

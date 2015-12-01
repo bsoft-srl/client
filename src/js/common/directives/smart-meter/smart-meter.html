@@ -34,7 +34,8 @@
 
             <div class="panel-footer" ng-show="sm.toggled">
                 <ul class="list-inline">
-                    <li><span class="label label-info">DATA POINTS</span> {{sm.dataPointsSize}}
+                    <li><span class="label label-info">METRICA</span>&nbsp;{{sm.model.tipologia}}</li>
+                    <li><span class="label label-info">DATA POINTS</span>&nbsp;{{sm.dataPointsSize}}
                         <span class="btn-group dropup" ng-if="sm.downsamples">
                             <button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">Downsample <i class="fa fa-caret-up ml"></i></button>
                             <ul class="dropdown-menu">
@@ -42,9 +43,9 @@
                             </ul>
                         </span>
                     </li>
-                    <li><span class="label label-info">MAC</span> {{sm.model.mac_address}}</li>
-                    <li><span class="label label-info">DATALOGGER</span> {{sm.model.mac_address_datalogger}}</li>
-                    <li><span class="label label-info">ULTIMO AGGIORNAMENTO</span> {{sm.lastUpdate}}</li>
+                    <li><span class="label label-info">MAC</span>&nbsp;{{sm.model.mac_address}}</li>
+                    <li><span class="label label-info">DATALOGGER</span>&nbsp;{{sm.model.mac_address_datalogger}}</li>
+                    <li><span class="label label-info">ULTIMO AGGIORNAMENTO</span>&nbsp;{{sm.lastUpdate}}</li>
                 </ul>
             </div>
         </div>

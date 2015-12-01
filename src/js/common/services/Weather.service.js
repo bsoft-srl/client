@@ -61,6 +61,8 @@
                         title: 'OpenWeatherMap',
                         text: retval.isError
                     });
+
+                    return d.resolve(null);
                 })
                 .finally(function () {
                     retval.isLoading = false;

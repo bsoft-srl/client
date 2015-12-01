@@ -74,7 +74,7 @@
         function fetch(force) {
 
             var
-                url = API_URL + '/profilo/me?include=u,ui,e,s,z,de,i,g',
+                url = API_URL + '/profilo/me?include=ui,e,s,z,de,i,g',
                 cachedModel = store.get('profile'),
                 model = {},
                 d = $q.defer();
@@ -193,7 +193,9 @@
                 'parent',
                 'parent_id',
                 'latLon',
-                'consumi'
+                'consumi',
+                'dispositivi_elettrici',
+                'zone'
             );
 
             _.each(model, function (v, k) {
