@@ -52,6 +52,7 @@
 
             console.debug('Fetching smart meter data…', url);
             retval.isLoading = true;
+            UIStateService.resetSensoriToGo(1);
 
             $http.get(url)
                 .then(function (res) {
@@ -74,6 +75,7 @@
                 })
                 .finally(function () {
                     retval.isLoading = false;
+                    UIStateService.sensoriToGo -= 1;
                 });
 
             return d.promise;

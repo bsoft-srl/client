@@ -67,6 +67,15 @@
             profile.getUIByEdificioId(vm.model.id)
                 .then(function (rows) {
                     vm.ui = rows.length ? rows : false;
+
+                    if (!UIState.initialized && vm.ui) {
+
+                        UIState.initialized = true;
+
+                        console.debug('Getting default UI…', vm.ui[0]);
+
+                        selectUI(vm.ui[0].id);
+                    }
                 });
 
             vm.sensoriCount = {};
@@ -96,7 +105,7 @@
             (UIState.selectedUI && delete UIState.selectedUI.parsed);
             (UIState.selectedBuilding && delete UIState.selectedBuilding.parsed);
 
-            UIState.offsideToggled = false;
+            UIState.toggleOffside(false);
 
             profile.getSensoriByUI(id)
                 .then(function (collection) {
@@ -119,11 +128,15 @@
          *
          */
         function unselectUI() {
+            (UIState.selectedUI && delete UIState.selectedUI.parsed);
+            (UIState.selectedBuilding && delete UIState.selectedBuilding.parsed);
+
             UIState.selectedUI = null;
             UIState.activeBuilding = null;
             UIState.selectedBuilding = null;
+            UIState.sensori.length = null;
 
-            UIState.setPanel('home');
+            UIState.setPanel('home', true);
         }
 
         /**

@@ -12,6 +12,8 @@
             selectedBuilding: null,
             activeBuilding: null,
             panel: 'home',
+            initialized: false, // utilizzato per indicare che è stata caricata una unità immboiliare di default
+            sensoriToGo: 0, // utilizzato per indicare quanti smart meters mancano ancora da caricare
             errors: [
                 /*{
                     title: '',
@@ -21,8 +23,17 @@
 
             /** */
             isPanel: isPanel,
-            setPanel: setPanel
+            setPanel: setPanel,
+            toggleOffside: toggleOffside,
+            resetSensoriToGo: resetSensoriToGo
         };
+
+        /**
+         *
+         */
+        function resetSensoriToGo(amount) {
+            retval.sensoriToGo = (retval.sensoriToGo + amount) || _.size(retval.sensori);
+        }
 
         /**
          *
@@ -40,10 +51,18 @@
         /**
          *
          */
-        function setPanel(type) {
+        function toggleOffside(toggle) {
+            retval.offsideToggled = !!toggle;
+        }
+
+        /**
+         *
+         */
+        function setPanel(type, offsideToggled) {
             retval.panel = type;
-            retval.offsideToggled = false;
             retval.errors = [];
+
+            toggleOffside(offsideToggled);
         }
 
         /** */

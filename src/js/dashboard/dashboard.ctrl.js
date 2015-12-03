@@ -25,10 +25,15 @@
 
         /** */
         vm.utenza = model.utenza;
+
+        /** */
         vm.edifici = model.edifici;
         vm.sensori = model.sensori;
         vm.dispositiviElettrici = model.dispositivi_elettrici;
+
+        /** */
         vm.zone = model.zone;
+        vm.illuminazione = model.illuminazione
 
         vm.profile = profile;
         vm.state = UIState;
@@ -37,7 +42,18 @@
         vm.offsideToggle = offsideToggle;
         vm.weather = weather;
 
-        console.log(model);
+        /** */
+        vm.chartData = {
+            dispositiviElettrici: {
+                conteggio: null,
+                potenza: null,
+                utilizzo: null
+            },
+
+            zone: {
+                consumi: null
+            }
+        };
 
         /** */
         vm.u = {};
@@ -45,6 +61,7 @@
 
         /**
          * Filtra i dispositivi elettrici in base all'unità selezionata
+         * TODO: refactoring
          */
          $scope.$watchCollection(function () {
              if (UIState.selectedUI) {
@@ -53,7 +70,66 @@
                  });
              }
          }, function (newvalue) {
-             if (newvalue && _.size(newvalue)) UIState.selectedUI.dispositivi_elettrici = newvalue;
+            var dps = {
+                indexLabels: [],
+                conteggio: [],
+                potenza: [],
+                utilizzo: [],
+                consumo: []
+            };
+
+            if (newvalue && _.size(newvalue)) {
+                UIState.selectedUI.dispositivi_elettrici = newvalue;
+
+                _.each(newvalue, function (model, i) {
+                    var label = model.tipologia;
+
+                    dps.conteggio.push({
+                        x: i,
+                        y: model.conteggio,
+                        label: label
+                    });
+
+                    dps.potenza.push({
+                        y: model.potenza_nominale_w,
+                        indexLabel: label,
+                        soSuffix: 'W'
+                    });
+
+                    dps.utilizzo.push({
+                        y: model.modalita_utilizzo_h_g,
+                        indexLabel: label,
+                        soSuffix: 'h/giorno'
+                    });
+
+                    dps.consumo.push({
+                        y: (model.potenza_nominale_w * model.modalita_utilizzo_h_g) / 1000,
+                        indexLabel: label,
+                        soSuffix: 'KWh'
+                    })
+                });
+
+                /** */
+                vm.chartData.dispositiviElettrici.conteggio = [{
+                    type: 'column',
+                    dataPoints: dps.conteggio
+                }];
+
+                vm.chartData.dispositiviElettrici.potenza = [{
+                    type: 'doughnut',
+                    dataPoints: dps.potenza
+                }];
+
+                vm.chartData.dispositiviElettrici.utilizzo = [{
+                    type: 'doughnut',
+                    dataPoints: dps.utilizzo
+                }];
+
+                vm.chartData.dispositiviElettrici.consumo = [{
+                    type: 'doughnut',
+                    dataPoints: dps.consumo
+                }];
+             }
          });
 
          /**
@@ -66,7 +142,42 @@
                   });
               }
           }, function (newvalue) {
-              if (newvalue && _.size(newvalue)) UIState.selectedUI.zone = newvalue;
+              var dps = {
+                consumi: []
+              };
+
+              if (newvalue && _.size(newvalue)) {
+                  UIState.selectedUI.zone = newvalue;
+
+                  _.each(UIState.selectedUI.zone, function (zona, i) {
+                      var
+                        consumiW,
+                        label = zona.tipologia || 'ID #' + zona.id;
+
+                      zona.illuminazione = _.filter(model.illuminazione, function (model) {
+                          return model.parent_id == zona.id;
+                      });
+
+                      /** */
+                      consumiW = _.reduce(zona.illuminazione, function (memo, model) {
+                          return memo + model.potenza_nominale_w * model.quantita;
+                      }, 0);
+
+                      if (consumiW)
+                          dps.consumi.push({
+                              x: i,
+                              y: consumiW,
+                              label: label,
+                              soSuffix: 'W'
+                          });
+                  });
+
+                  /** */
+                  vm.chartData.zone.consumi = [{
+                      type: 'column',
+                      dataPoints: dps.consumi
+                  }];
+              }
           });
 
         /**
@@ -184,7 +295,6 @@
          *
          */
         function initialize() {
-            console.log(model);
         }
 
         /**
@@ -230,6 +340,7 @@
             UIState.activeBuilding = null;
             UIState.sensori = null;
             UIState.panel = 'home';
+            UIState.initialized = false;
 
             $state.go('login');
         }

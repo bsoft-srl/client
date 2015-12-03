@@ -20,8 +20,8 @@
 
         /** */
         //vm.codiceFiscale = 'DLLNDR73P22B963U';
-        //vm.codiceFiscale = '80004770618';
-        vm.codiceFiscale = 'RGSGCM70H23B963X';
+        vm.codiceFiscale = '80004770618';
+        //vm.codiceFiscale = 'RGSGCM70H23B963X';
         vm.password = 'sideco';
 
         vm.login = login;

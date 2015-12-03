@@ -14,7 +14,9 @@
                 <em class="so-list-group__icon fa fa-eye mr" ng-if="ui.id == e.state.selectedUI.id"></em>
                 <span class="text-muted mr" ng-if="ui.id != e.state.selectedUI.id">{{$index + 1}}</span>
                 {{ui.id}}
-                 <span class="badge pull-right bg-warning">{{e.sensoriCount[ui.id] || 0}}</span>
+                 <span class="badge pull-right bg-warning">
+                     <span ng-if="ui.id == e.state.selectedUI.id && e.state.sensoriToGo">{{(e.sensoriCount[ui.id] || 0) - e.state.sensoriToGo}}/</span>
+                     {{e.sensoriCount[ui.id] || 0}}</span>
             </button>
         </div>
         <small ng-show="!e.ui" class="text-muted">Nessuna unit&agrave; monitorata.</small>

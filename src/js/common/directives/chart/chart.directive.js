@@ -13,7 +13,8 @@
             restrict: 'A',
             scope: {
                 dataPoints: '=dps',
-                options: '='
+                options: '=',
+                spec: '='
             },
             link: link
         }
@@ -89,7 +90,7 @@
                             if (!doneTitle) {
                                 retval.push([
                                     '<div class="so-chart__tooltip-title">',
-                                        e.entries[i].dataPoint.label,
+                                        e.entries[i].dataPoint.label || e.entries[i].dataPoint.indexLabel,
                                     '</div>',
                                 ].join(''));
 
@@ -98,9 +99,10 @@
 
                             retval.push([
                                 '<div class="so-chart__tooltip-body">',
-                                    '<i class="so-chart__tooltip-color" style="background-color: ' + e.entries[i].dataSeries.color + '"></i>',
+                                    e.entries[i].dataSeries.color && '<i class="so-chart__tooltip-color" style="background-color: ' + e.entries[i].dataSeries.color + '"></i>',
                                     e.entries[i].dataSeries.legendText && e.entries[i].dataSeries.legendText + ': ',
-                                    e.entries[i].dataPoint.y.toFixed(4),
+                                    typeof e.entries[i].dataPoint.y == 'number' ? e.entries[i].dataPoint.y.toFixed(4) : e.entries[i].dataPoint.y,
+                                    e.entries[i].dataPoint.soSuffix && ' ' + e.entries[i].dataPoint.soSuffix,
                                 '</div>'
                             ].join(''));
                         }
@@ -110,8 +112,6 @@
                     }
                 }
             });
-
-
     }
 
 })();
