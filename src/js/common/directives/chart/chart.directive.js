@@ -13,7 +13,8 @@
             restrict: 'A',
             scope: {
                 dataPoints: '=dps',
-                options: '='
+                options: '=',
+                minimum: '@'
             },
             link: link
         }
@@ -53,8 +54,10 @@
                     tickLength: 0,
                     labelFontColor: '#333',
                     labelFontFamily: 'Helvetica',
-                    labelFontSize: 10
+                    labelFontSize: 10,
+                    minimum: scope.minimum !== undefined ? scope.minimum : null
                 },
+
 
                 axisX: {
                     lineColor: '#333',
