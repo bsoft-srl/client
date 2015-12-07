@@ -49,7 +49,7 @@
             suffix: $scope.suffix,
             keys: ($scope.keys && $scope.keys.split(',')) || [],
             chartType: $scope.chartType || 'doughnut',
-            chartData: []
+            chartData: null
         };
 
         vm.service = {
@@ -57,10 +57,6 @@
         }
 
         vm.chartType = chartType;
-
-        vm.u = {
-            size: _.size
-        };
 
         initialize();
 
@@ -155,7 +151,7 @@
                     dataPoints: dps
                 }];
 
-            return [];
+            return false;
         }
     }
 
