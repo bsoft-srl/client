@@ -13,8 +13,7 @@
             restrict: 'A',
             scope: {
                 dataPoints: '=dps',
-                options: '=',
-                spec: '='
+                options: '='
             },
             link: link
         }

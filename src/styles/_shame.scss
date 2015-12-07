@@ -2,6 +2,42 @@
     position: relative !important;
 }
 
+.animated--delayed {
+    animation-delay: 1s;
+}
+
+.animated--fast {
+    animation-duration: .3s;
+}
+
+.so-tooltip {
+    position: absolute;
+    bottom: 100%;
+    margin-bottom: -6px;
+    left: 0;
+    text-align: center;
+    width: 100%;
+    color: rgba(#fff, .9);
+    font-size: 12px;
+
+    &__body {
+        display: inline-block;
+        background: #ec2121;
+        padding: 6px;
+        border-radius: 6px;
+
+        &::after {
+            content: "";
+            position: absolute;
+            border: 6px solid;
+            border-color: #ec2121 transparent transparent transparent;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+        }
+    }
+}
+
 .breadcrumb-so {
     background: transparent;
 

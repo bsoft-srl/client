@@ -12,6 +12,7 @@
             selectedBuilding: null,
             activeBuilding: null,
             panel: 'home',
+            intervalFirstPicked: false,
             initialized: false, // utilizzato per indicare che è stata caricata una unità immboiliare di default
             sensoriToGo: 0, // utilizzato per indicare quanti smart meters mancano ancora da caricare
             errors: [

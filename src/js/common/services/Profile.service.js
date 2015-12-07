@@ -35,7 +35,7 @@
         /**
          *
          */
-        function fetch(force) {
+        function _fetch(force) {
             var
                 model = {},
                 d = $q.defer();
@@ -71,7 +71,7 @@
         /**
          *
          */
-        function _fetch(force) {
+        function fetch(force) {
 
             var
                 url = API_URL + '/profilo/me?include=ui,e,s,z,de,i,g',

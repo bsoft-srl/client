@@ -52,13 +52,6 @@
         </span>
     </h3>
 
-    <!--<span class="pull-right"  style="text-align: right">
-        <br>
-        <small class="text-muted">
-            {{dashboard.state.selectedBuilding.indirizzo}} {{dashboard.state.selectedBuilding.civico}}
-        </small>
-    </span>-->
-
     <ol class="breadcrumb breadcrumb-so" ng-if="dashboard.state.selectedBuilding">
         <li><a ng-class="{active: dashboard.isPanel('home')}" ng-click="dashboard.panel('home')"><i class="fa fa-area-chart"></i></a></li>
         <li><a ng-class="{active: dashboard.isPanel('building')}" ng-click="dashboard.panel('building')">{{dashboard.state.selectedBuilding.denominazione}}</a></li>
@@ -167,7 +160,7 @@
                             </thead>
                             <tbody>
                                 <tr ng-repeat="tr in table.tr">
-                                    <td ng-repeat="td in tr">
+                                    <td ng-repeat="td in tr track by $index">
                                         {{td}}
                                     </td>
                                 </tr>
@@ -207,12 +200,6 @@
         <main class="col-lg-12" ng-show="dashboard.isPanel('ui')">
             <div class="row">
                 <div class="col-lg-12">
-                    <!--<ol class="breadcrumb breadcrumb-so">
-                      <li><a ng-click="dashboard.panel('ui.index')" ng-class="{'active': dashboard.isPanel('ui.index')}"><i class="fa fa-home mr"></i>Unit&agrave; Immobiliare</a></li>
-                      <li ng-show="dashboard.state.selectedUI.dispositivi_elettrici"><a ng-click="dashboard.panel('ui.devices')" ng-class="{'active': dashboard.isPanel('ui.devices')}"><i class="fa fa-plug mr"></i>Dispositivi Elettrici</a></li>
-                      <li ng-show="dashboard.state.selectedUI.zone"><a ng-click="dashboard.panel('ui.zones')" ng-class="{'active': dashboard.isPanel('ui.zones')}"><i class="fa fa-cubes mr"></i>Zone</a></li>
-                  </ol>-->
-
                     <div class="panel panel-primary clearfix" ng-show="dashboard.isPanel('ui.index')">
                         <h3 class="panel-title pull-left pv ph"><i class="fa fa-home mr"></i> {{dashboard.state.selectedUI.id}}</h3>
                         <table datatable="ng" dt-options="dashboard.dtOptions" class="table table-striped">
@@ -233,7 +220,53 @@
 
                     <div class="container-fluid" ng-if="dashboard.isPanel('ui.devices')">
                         <div class="row">
+
                             <div class="col-sm-6">
+                                <so-chart-panel
+                                    title="Utilizzo h/giorno"
+                                    icon="hourglass"
+                                    label="tipologia"
+                                    keys="modalita_utilizzo_h_g"
+                                    suffix="h/giorno"
+                                    collection="dashboard.state.selectedUI.dispositivi_elettrici"
+                                ></so-chart-panel>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <so-chart-panel
+                                    title="Potenza nominale"
+                                    icon="bolt"
+                                    label="tipologia"
+                                    keys="potenza_nominale_w"
+                                    suffix="W"
+                                    collection="dashboard.state.selectedUI.dispositivi_elettrici"
+                                ></so-chart-panel>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <so-chart-panel
+                                    title="Consumo energetico"
+                                    icon="bolt"
+                                    label="tipologia"
+                                    keys="potenza_nominale_w,modalita_utilizzo_h_g"
+                                    suffix="KWh"
+                                    collection="dashboard.state.selectedUI.dispositivi_elettrici"
+                                    y="dashboard.chartData.dispositiviElettrici.consumoEnergetico"
+                                ></so-chart-panel>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <so-chart-panel
+                                    title="Conteggio"
+                                    icon="th-large"
+                                    label="tipologia"
+                                    keys="conteggio"
+                                    collection="dashboard.state.selectedUI.dispositivi_elettrici"
+                                    chart-type="column"
+                                ></so-chart-panel>
+                            </div>
+
+                            <!--<div class="col-sm-6" ng-if="dashboard.chartData.dispositiviElettrici.utilizzo[0].dataPoints">
                                 <div class="panel">
                                     <div class="panel-heading">
                                         <h3 class="panel-title"><i class="fa fa-hourglass mr"></i> Utilizzo h/giorno</h3>
@@ -242,65 +275,23 @@
                                         <div so-chart dps="dashboard.chartData.dispositiviElettrici.utilizzo" style="height: 300px"></div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="panel">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title"><i class="fa fa-bolt mr"></i> Potenza Nominale</h3>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div so-chart dps="dashboard.chartData.dispositiviElettrici.potenza" style="height: 300px"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="panel">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title"><i class="fa fa-bolt mr"></i> Consumo Energetico</h3>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div so-chart dps="dashboard.chartData.dispositiviElettrici.consumo" style="height: 300px"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="panel">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title"><i class="fa fa-th-large mr"></i> Conteggio</h3>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div so-chart dps="dashboard.chartData.dispositiviElettrici.conteggio" style="height: 300px"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--<div class="col-sm-2">
-                                <div class="panel panel-success" ng-repeat="d in dashboard.state.selectedUI.dispositivi_elettrici">
-                                    <div class="panel-heading clearfix">
-                                        <h3 class="panel-title">
-                                            <span class="badge pull-right" title="Conteggio">{{d.conteggio}}</span>
-                                            <i class="fa fa-plug mr"></i> {{d.tipologia}}
-                                        </h3>
-                                    </div>
-
-                                    <ul class="list-group list-group-so">
-                                        <li class="list-group-item"><span class="text-muted">POTENZA</span>&nbsp;{{d.potenza_nominale_w || 0}} watt</li>
-                                        <li class="list-group-item"><span class="text-muted">MODALIT&Agrave; UTILIZZO</span>&nbsp;{{d.modalita_utilizzo_h_g || 0}} h/giorno</li>
-                                    </ul>
-                                </div>
                             </div>-->
                         </div>
                     </div>
 
                     <div ng-if="dashboard.isPanel('ui.zones')" class="row">
-                        <div class="col-xs-12" ng-if="dashboard.u.size(dashboard.chartData.zone.consumi[0].dataPoints)">
-                            <div class="panel">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title"><i class="fa fa-bolt"></i> Illuminazione Consumi</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <div so-chart dps="dashboard.chartData.zone.consumi" style="height: 200px"></div>
-                                </div>
-                            </div>
+                        <div class="col-sm-12">
+                            <so-chart-panel
+                                title="Consumo illuminazione zona"
+                                icon="bolt"
+                                label="tipologia"
+                                suffix="W"
+                                collection="dashboard.state.selectedUI.zone"
+                                y="dashboard.chartData.zone.consumoEnergetico"
+                                chart-type="column"
+                                keys="illuminazione"
+                                ng-if="dashboard.u.size(dashboard.state.selectedUI.zone)"
+                            ></so-chart-panel>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" style="float: none; display: inline-block; vertical-align: top" ng-repeat="z in dashboard.state.selectedUI.zone">
                             <div class="panel panel-success">

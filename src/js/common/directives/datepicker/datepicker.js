@@ -35,6 +35,16 @@
         vm.state = UIStateService;
 
         $scope.UIStateService = UIStateService;
+
+        /** */
+        vm.hideTooltip = hideTooltip;
+
+        /**
+         *
+         */
+        function hideTooltip() {
+            UIStateService.intervalFirstPicked = true;
+        }
     }
 
     /**
@@ -54,7 +64,6 @@
 
         $start.datepicker(_.extend(sharedOpts, {
             onClose: function (date) {
-                //scope.UIStateService.resetSensoriToGo();
                 $end.datepicker('option', 'minDate', date);
             }
         }));
@@ -62,7 +71,6 @@
         $end.datepicker(_.extend(sharedOpts, {
             minDate: now,
             onClose: function (date) {
-                //scope.UIStateService.resetSensoriToGo();
                 $start.datepicker('option', 'maxDate', date);
             }
         }));
