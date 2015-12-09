@@ -37,6 +37,11 @@
                 chart.render();
             });
 
+            CanvasJS.addCultureInfo('it', {
+                decimalSeparator: ',',
+                digitGroupSeparator: ''
+            });
+
             chart = new CanvasJS.Chart(el[0], {
 
                 animationEnabled: true,
@@ -103,7 +108,8 @@
                                 '<div class="so-chart__tooltip-body">',
                                     e.entries[i].dataSeries.color && '<i class="so-chart__tooltip-color" style="background-color: ' + e.entries[i].dataSeries.color + '"></i>',
                                     e.entries[i].dataSeries.legendText && e.entries[i].dataSeries.legendText + ': ',
-                                    typeof e.entries[i].dataPoint.y == 'number' ? e.entries[i].dataPoint.y.toFixed(4) : e.entries[i].dataPoint.y,
+                                    //typeof e.entries[i].dataPoint.y == 'number' ? e.entries[i].dataPoint.y.toFixed(4) : e.entries[i].dataPoint.y,
+                                    CanvasJS.formatNumber(e.entries[i].dataPoint.y, '#,##0.####', 'it'),
                                     e.entries[i].dataPoint.soSuffix && ' ' + e.entries[i].dataPoint.soSuffix,
                                 '</div>'
                             ].join(''));
