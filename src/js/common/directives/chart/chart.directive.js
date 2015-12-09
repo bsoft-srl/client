@@ -46,6 +46,7 @@
 
                 animationEnabled: true,
                 zoomEnabled: true,
+                culture: 'it',
 
                 axisY: {
                     includeZero: false,
