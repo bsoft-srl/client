@@ -162,3 +162,228 @@
 .so-map {
     margin: -20px -20px 20px -20px;
 }
+
+.so-stage {
+    width: 531px;
+    height: 457px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -229px;
+    margin-left: -265px;
+    z-index: 10;
+    overflow: hidden;
+}
+
+.so-icon {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+}
+
+.so-icon--circle {
+    border: 2px solid #C6C6C5;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    bottom: 90px;
+    left: 170px;
+    opacity: 0;
+    animation: fadeIn .5s 1s both;
+}
+
+.so-icon--bar {
+    height: 7px;
+    background: #2EAC66;
+    width: 40px;
+    bottom: 85px;
+    left: 140px;
+    transform: rotateZ(45deg) translateY(170px);
+    animation: slideIn--bar .5s 1s both;
+    opacity: 0;
+}
+
+.so-icon--sun {
+    left: 50%;
+    margin-left: -30px;
+    top: 160px;
+    animation: slideTop--sun .5s 1s both;
+}
+
+.so-icon--plug {
+    left: 50%;
+    margin-left: -30px;
+    height: 92px;
+    bottom: 200px;
+    animation: slideBottom--plug .5s 1s both;
+}
+
+.so-icon--cord {
+    width: 2px;
+    border-radius: 1px;
+    left: 50%;
+    margin-left: -1px;
+    background: #951B81;
+    top: 140px;
+    animation: slideTop--cord .5s 1s both;
+}
+
+.so-icon--graph {
+    text-align: center;
+    height: 48px;
+    right: 170px;
+    top: 100px;
+    animation: fadeIn .5s 1s both;
+}
+
+.so-icon__bar {
+    vertical-align: bottom;
+    width: 12%;
+    background: #F9B233;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 30%;
+    animation: grow--one .6s 1s both infinite linear alternate;
+}
+
+.so-icon__bar + .so-icon__bar {
+    height: 80%;
+    left: 20%;
+    animation: grow--one .6s both infinite linear alternate;
+}
+
+.so-icon__bar + .so-icon__bar + .so-icon__bar {
+    height: 50%;
+    left: 40%;
+    animation: grow--one .6s .3s both infinite linear alternate;
+}
+
+.so-icon__bar + .so-icon__bar + .so-icon__bar + .so-icon__bar {
+    height: 60%;
+    left: 60%;
+    animation: grow--one .6s .6s both infinite linear alternate;
+}
+
+.so-icon__bar + .so-icon__bar + .so-icon__bar + .so-icon__bar + .so-icon__bar {
+    height: 40%;
+    left: 80%;
+    animation: grow--one 1s both infinite linear alternate;
+}
+
+.so-icon--drop {
+    width: 40px;
+    height: 40px;
+    left: 190px;
+    top: 90px;
+
+    left: 90px;
+    top: -40px;
+    opacity: 0;
+    animation: slideBottom--drop .3s 1s both;
+}
+
+.so-icon--drop-o {
+    transform: rotate(45deg);
+    width: 36px;
+    right: 50px;
+    top: 155px;
+
+    right: -60px;
+    top: 30px;
+    animation: slideLeft--drop-o .3s 1s both;
+    opacity: 0;
+}
+
+.so-icon--drop-o2 {
+    width: 24px;
+    right: 200px;
+    bottom: 80px;
+    transform: rotate(-45deg) translateY(200px);
+    animation: slideLeft--drop-o2 .3s 1s both;
+    opacity: 0;
+}
+
+.so-icon--sun-alt {
+    top: 155px;
+    left: 10px;
+    animation: rotate 3s 1s both infinite linear, fadeIn .3s 1s both;
+    opacity: 0;
+}
+
+.so-icon--bolt {
+    right: 50px;
+    top: 200px;
+    opacity: 0;
+    animation: fadeIn .5s 1s both;
+}
+
+.so-icon--bolt-alt {
+    left: 70px;
+    top: 200px;
+    opacity: 0;
+    animation: fadeIn .5s 1s both;
+}
+
+@keyframes rotate {
+    100% {
+        transform: rotateZ(360deg);
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes slideLeft--drop-o {
+    100% {
+        opacity: 1;
+        transform: rotate(45deg) translateY(160px);
+    }
+}
+
+@keyframes slideLeft--drop-o2 {
+    100% {
+        opacity: 1;
+        transform: rotate(-45deg) translateY(0);
+    }
+}
+
+@keyframes slideBottom--drop {
+    100% {
+        opacity: 1;
+        transform: translateY(130px) translateX(100px) ;
+    }
+}
+
+@keyframes grow--one {
+    100% { transform: scaleY(1.5)}
+}
+
+@keyframes grow--two {
+    100% { transform: scaleY(2)}
+}
+
+@keyframes slideTop--sun {
+    100% { transform: translateY(-130px)}
+}
+
+@keyframes slideIn--bar {
+    100% {
+        transform: translateY(0) rotateZ(225deg);
+        opacity: 1;
+    }
+}
+
+@keyframes slideTop--cord {
+    100% { transform: translateY(-40px)}
+}
+
+@keyframes slideBottom--plug {
+    100% { transform: translateY(150px)}
+}

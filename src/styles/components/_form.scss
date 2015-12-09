@@ -1,4 +1,19 @@
 .#{$ns}form {
+    position: relative;
+    z-index: 50;
+    
+    &::before {
+        content: "";
+        position: absolute;
+        background: #fff;
+        left: -6px;
+        top: -6px;
+        right: -6px;
+        bottom: -6px;
+        padding: 12px;
+        z-index: -1;
+    }
+
     &__input {
         border: none;
         width: 100%;
