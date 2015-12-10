@@ -47,6 +47,12 @@
         vm.u = {};
         vm.u.size = _.size;
 
+        /* setta la flag della produzione energetica */
+        UIState.canProduceEnergy = _.some(vm.sensori, function (model) {
+            return model.tipologia.indexOf('produzione') != -1;
+        });
+        console.log("Può produrre energia?", UIState.canProduceEnergy);
+
         /**
          * Filtra i dispositivi elettrici in base all'unità selezionata
          */
