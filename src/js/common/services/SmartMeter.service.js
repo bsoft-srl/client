@@ -10,7 +10,9 @@
 
     function factory($http, $q, store, UIStateService, API_URL) {
 
-        var retval;
+        var
+            retval,
+            canceller = $q.defer();
 
         /* */
         return retval = {
@@ -19,8 +21,16 @@
 
             /** */
             isLoading: false,
-            isError: false
+            isError: false,
+            abort: abort
         };
+
+        /**
+         *
+         */
+        function abort() {
+            canceller.resolve('aborted');
+        }
 
         /**
          *
@@ -54,7 +64,7 @@
             retval.isLoading = true;
             UIStateService.resetSensoriToGo(1);
 
-            $http.get(url)
+            var request = $http.get(url, {timeout: canceller.promise})
                 .then(function (res) {
                     dps = res.data.payload[0].dps;
 
