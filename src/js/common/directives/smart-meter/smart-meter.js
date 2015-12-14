@@ -44,7 +44,7 @@
         /** */
         vm.channels = _.range(vm.model.numero_canali);
         vm.channel = 0;
-        vm.metric = vm.model.tipologia;
+        vm.metric = vm.model.tipologia['metric'];
         vm.update = update;
 
         /** */
@@ -168,8 +168,8 @@
             .then(function (dps) {
                 vm.dataPointsSize = _.size(dps);
                 vm.chartData = updateChartData(dps);
-                vm.title = getTitle(vm.metric, channel);
                 vm.channel = channel;
+                vm.title = 'Misuratore ' + vm.model.tipologia.desc.toLowerCase();
                 vm.downsample = downsample;
             })
             .catch(function (err) {
@@ -200,49 +200,6 @@
                 color: '#286090',
                 dataPoints: dataPoints
             }];
-        }
-
-
-        /**
-         *
-         */
-        function getTitle(metric, channel) {
-
-            if (metric == 'ambientale') {
-                switch (channel) {
-                    case 0: return 'Temperatura (°C)';
-                    case 1: return 'Umidità (%Rh)';
-                    case 2: return 'CO2 (Ppm)';
-                }
-            } else if (metric == 'energia_elettrica') {
-                switch (channel) {
-                    case 0: return 'Energia Elettrica (KWh)';
-                    case 1: return 'Energia Reattiva (Kvarh)';
-                }
-            } else if (metric == 'ambientale_out_2ch') {
-                switch (channel) {
-                    case 0: return 'Temperatura (°C)';
-                    case 1: return 'Umidità (%Rh)'
-                }
-            } else if (metric == 'ambientale_out_3ch') {
-                switch (channel) {
-                    case 0: return 'Temperatura (°C)';
-                    case 1: return 'Temperatura (°C)';
-                    case 2: return 'Temperatura (°C)';
-                }
-            } else if (metric == 'ambientale_out_meteo_3ch') {
-                switch (channel) {
-                    case 0: return 'Meteo / Radiazione solare W/m2';
-                    case 1: return 'Meteo / Direzione °';
-                    case 2: return 'Meteo / Velocità m/s';
-                }
-            } else if (metric == 'produzione') {
-                switch (channel) {
-                    case 0: return 'Produzione / Temperatura (°C)';
-                    case 1: return 'Produzione / Corrente A';
-                    case 2: return 'Produzione / Tensione V';
-                }
-            }
         }
     }
 })();

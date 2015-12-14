@@ -38,7 +38,9 @@
 
     controller.$inject = ['$scope', 'UIStateService'];
     function controller($scope, UIStateService) {
-        var vm = this;
+        var
+            vm = this,
+            i = 0;
 
         vm.state = {
             y: $scope.y() || y,
@@ -87,13 +89,13 @@
 
         /** */
 
-        function parseChartData(spec) {
+        function parseChartData(spec, arr) {
             var
                 model = this,
                 isValid = true,
                 retval = [],
 
-                i = spec.i,
+                //i = spec.i,
                 label = spec.label,
                 suffix = spec.suffix,
                 chartType = spec.chartType,
@@ -116,7 +118,7 @@
 
             if (chartType == 'column') {
                 return {
-                    x: i,
+                    x: i++,
                     y: vm.state.y.apply(model, keys),
                     label: label,
                     soSuffix: suffix
@@ -144,6 +146,13 @@
 
                 dataPoint && dps.push(dataPoint);
             });
+
+            /*
+             * Resetta il contatore
+             * Il contatore è utilizzato per far si che i dati sul grafico a colonne
+             * si susseguano senza "buchi"
+             */
+            i = 0;
 
             if (_.size(dps))
                 return [{
