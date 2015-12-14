@@ -25,6 +25,7 @@
             getUtenza: getUtenza,
 
             /** */
+            getTipologiaUtenza: getTipologiaUtenza,
             getEdificioById: getEdificioById,
             getUIByEdificioId: getUIByEdificioId,
             getSensoriByUI: getSensoriByUI,
@@ -119,6 +120,16 @@
             return fetch()
                 .then(function (model) {
                     return $q.resolve(model.utenza);
+                });
+        }
+
+        /**
+         *
+         */
+        function getTipologiaUtenza() {
+            return fetch()
+                .then(function (model) {
+                    return model.utenza.tipologia;
                 });
         }
 

@@ -66,10 +66,20 @@
                 /** Aggiunge i vari layer alla mappa */
                 var geoJson = [
                     'perimetro_quartiere',
-                    'grafo_viario'
+                    'grafo_viario',
+                    'privato',
+                    'pubblico',
+                    'commerciale'
                 ];
 
-                profileService.getUtenza()
+                _.each(geoJson, function (layerName) {
+                    profileService.getGeoJson(layerName)
+                        .then(function (data) {
+                            data && layer.addData(data);
+                        });
+                })
+
+                /*profileService.getUtenza()
                     .then(function (model) {
                         return model.tipologia;
                     })
@@ -85,7 +95,7 @@
                                     data && layer.addData(data);
                                 });
                         })
-                    });
+                    });*/
 
                 $scope.$watch(function () {
                     return UIStateService.selectedBuilding.latLon;

@@ -13,7 +13,7 @@
                             ng-repeat="c in sm.channels"
                             ng-click="sm.update(c, sm.downsample)"
                         >
-                          {{c == 0 ? 'Canale' : ''}} {{c + 1}}
+                          {{sm.model.tipologia.c[c]}}
                       </button>
                     </div>
 
@@ -34,7 +34,7 @@
 
             <div class="panel-footer" ng-show="sm.toggled">
                 <ul class="list-inline">
-                    <li><span class="label label-info">METRICA</span>&nbsp;{{sm.model.tipologia}}</li>
+                    <li><span class="label label-info">METRICA</span>&nbsp;{{sm.model.tipologia.metric}}</li>
                     <li><span class="label label-info">DATA POINTS</span>&nbsp;{{sm.dataPointsSize}}
                         <span class="btn-group dropup" ng-if="sm.downsamples">
                             <button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">Downsample <i class="fa fa-caret-up ml"></i></button>

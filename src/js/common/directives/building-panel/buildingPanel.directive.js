@@ -115,6 +115,7 @@
             UIState.selectedUI = _.findWhere(vm.ui, {id: id}) || null;
 
             if (UIState.selectedUI) {
+
                 UIState.selectedUI.parsed = profile.extraInfo(UIState.selectedUI);
                 UIState.activeBuilding = vm.model.id + '';
                 UIState.selectedBuilding = vm.model;
