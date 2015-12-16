@@ -1,0 +1,18 @@
+<div class="so-pill panel widget bg-{{pill.bg}}" ng-if="pill.smartMeter">
+    <div class="row row-table">
+        <div class="col-xs-4 text-center bg-{{pill.bg}}-dark pv-lg">
+            <em class="fa fa-{{pill.icon || 'exclamation-circle'}} fa-3x"></em>
+        </div>
+        <div class="col-xs-8 pv-lg">
+
+            <small class="so-pill__range">
+                <span class="so-pill__start">{{pill.range.start}}</span>
+                &rsaquo;
+                <span class="so-pill__end">{{pill.range.end}}</span>
+            </small>
+
+            <div class="h2 m0 text-bold">{{pill.ui.consumi[pill.smartMeter.metric] || 0}}</div>
+            <div class="text-uppercase">{{pill.desc}}</div>
+        </div>
+    </div>
+</div>

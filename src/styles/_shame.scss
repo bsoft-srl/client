@@ -142,3 +142,34 @@
     left: 6px;
     z-index: 10;
 }
+
+
+.so-pill {}
+.so-pill__range {
+    color: #fff;
+    color: rgba(#fff, .45) !important;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    left: 0;
+    text-align: left;
+    padding: 0 12px;
+}
+
+/**
+ * Nascondo il tasto di pan di CanvasJS per evitare un bug durante la sincronizzazione
+ */
+button[state='pan'] {
+    display: none !important;
+}
+
+
+.so-pills {
+    display: table;
+    table-layout: fixed;
+}
+
+.so-pill {
+    display: table-cell;
+    outline: 1px solid red;
+}

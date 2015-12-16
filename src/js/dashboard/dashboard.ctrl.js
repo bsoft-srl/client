@@ -271,6 +271,8 @@
             UIState.panel = 'home';
             UIState.initialized = false;
             UIState.errors = [];
+            UIState.dateRange = {};
+            UIState.pillsCount = 0;
 
             $state.go('login');
         }
