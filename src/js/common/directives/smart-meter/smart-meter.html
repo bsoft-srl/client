@@ -28,7 +28,7 @@
                     <div class="so-nodps" ng-if="!sm.dataPointsSize">
                         Nessun dato restituito per il periodo selezionato.
                     </div>
-                    <div so-chart dps="sm.chartData" options="sm.chartOptions" style="height: 200px"></div>
+                    <div so-chart dps="sm.chartData" options="sm.chartOptions" metric="sm.metric" on-trigger="sm.onTrigger" group="sync" style="height: 200px"></div>
                 </div>
             </div>
 

@@ -25,8 +25,8 @@
     /**
      *
      */
-    controller.$inject = ['$scope', '$http', 'SmartMeterService', 'API_URL'];
-    function controller($scope, $http, smartMeter, API_URL) {
+    controller.$inject = ['$scope', '$http', 'SmartMeterService', 'API_URL', 'UIStateService'];
+    function controller($scope, $http, smartMeter, API_URL, UIStateService) {
         var vm = this;
 
         vm.service = smartMeter;
@@ -40,6 +40,9 @@
         /** */
         vm.start = $scope.start;
         vm.end = $scope.end;
+
+        UIStateService.start = $scope.start;
+        UIStateService.end = $scope.end;
 
         /** */
         vm.channels = _.range(vm.model.numero_canali);
@@ -81,6 +84,53 @@
         vm.toggled = false;
         vm.toggle = toggle;
 
+        /**
+         * Funzione di callback invocata quando si interagisce col grafico
+         * Il campo chart.options.metric presenta la metrica del sensore
+         * graficizzata dal grafico
+         */
+        vm.onTrigger = function (start, end, chart, trigger) {
+            var
+                rangePoints = [],
+                i, dp, date;
+
+            if (trigger == 'reset') {
+                // resetta il range di data
+                UIStateService.dateRange.start = moment(vm.start, 'DD-MM-YYYY').startOf('day');
+                UIStateService.dateRange.end = moment(vm.end, 'DD-MM-YYYY').endOf('day');
+                UIStateService.dateRange.trigger = trigger;
+            } else {
+                UIStateService.dateRange.start = start;
+                UIStateService.dateRange.end = end;
+                UIStateService.dateRange.trigger = trigger;
+            }
+
+            switch (chart.options.metric) {
+                case 'energia_elettrica':
+                    UIStateService.consumi['energia_elettrica'] = Math.ceil(Math.random() * 10);
+                break;
+            }
+
+            $scope.$apply();
+            //console.log(UIStateService.selectedDateRange);
+
+            /*console.log('Filtering…', start.unix(), end);
+
+            vm.isLoading = true;
+
+            smartMeter.fetch(vm.id, {
+                metric: vm.metric,
+                channel: vm.channel,
+                downsample: '1d-avg',
+                start: start.unix() * 1000,
+                end: end.unix() * 1000
+            }, true).then(function (model) {
+                console.log(model);
+            }).finally(function () {
+                vm.isLoading = false;
+            });*/
+        };
+
         initialize();
 
         /**
@@ -107,20 +157,22 @@
               return raw ? retval : retval.valueOf();
         }
 
-        /** */
-        $scope.$watch('start', function (newvalue, oldvalue) {
-            if (!vm.isLoading) {
-                vm.start = newvalue;
-                update(vm.channel);
-            }
-        });
+        /**
+         * Fa la query al webservice solo se il trigger proviene dal datepicker
+         */
+        _.each(['start', 'end'], function (v) {
+            $scope.$watch(function () {
+                return UIStateService.dateRange.value[v];
+            }, function (newvalue, oldvalue) {
+                var
+                    _newvalue = newvalue.format('DD-MM-YYYY'),
+                    _oldvalue = oldvalue.format('DD-MM-YYYY');
 
-        /** */
-        $scope.$watch('end', function (newvalue, oldvalue) {
-            if (!vm.isLoading) {
-                vm.end = newvalue;
-                update(vm.channel);
-            }
+                if (_newvalue != _oldvalue && !vm.isLoading && UIStateService.dateRange.trigger == 'reset') {
+                    vm[v] = newvalue;
+                    update(vm.channel);
+                }
+            });
         });
 
         /**
@@ -189,6 +241,7 @@
             _.each(rows, function (v, k) {
                 dataPoints.push({
                     label: moment.unix(k).format('DD MMM YYYY HH:mm'),
+                    x: new Date(k * 1000),
                     y: v
                 })
             });

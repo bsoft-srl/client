@@ -38,6 +38,14 @@
 
         /** */
         vm.hideTooltip = hideTooltip;
+        vm.onFocus = onFocus;
+
+        /**
+         *
+         */
+        function onFocus() {
+            hideTooltip();
+        }
 
         /**
          *
@@ -50,7 +58,7 @@
     /**
      *
      */
-    function link(scope, el, attrs) {
+    function link($scope, el, attrs) {
 
         var
             $start = el.find('.so-datepicker--start'),
@@ -60,18 +68,69 @@
                 changeMonth: true,
                 maxDate: 'today'
             },
-            now = moment().format('DD-MM-YYYY');
+            oldstart,
+            oldend;
+
+        $scope.UIStateService.dateRange = {
+            start: moment().startOf('day'),
+            end: moment().endOf('day'),
+            trigger: 'auto',
+            value: {
+                start: moment().startOf('day'),
+                end: moment().endOf('day'),
+            }
+        };
+
+        $start.bind('focus', function () {
+            oldstart = $start[0].value;
+        });
+
+        $end.bind('focus', function () {
+            oldend = $end[0].value;
+        });
 
         $start.datepicker(_.extend(sharedOpts, {
             onClose: function (date) {
+                var
+                    _start = moment($start[0].value, 'DD-MM-YYYY').startOf('day'),
+                    _end = moment($end[0].value, 'DD-MM-YYYY').endOf('day');
+
                 $end.datepicker('option', 'minDate', date);
+
+                if (oldstart != _start.format('DD-MM-YYYY')) {
+                    $scope.UIStateService.dateRange.start = moment(date, 'DD-MM-YYYY');
+                    $scope.UIStateService.dateRange.value = {
+                        start: _start,
+                        end: _end
+                    };
+                    $scope.UIStateService.dateRange.trigger = 'reset';
+
+                    $scope.$apply();
+                }
             }
         }));
 
         $end.datepicker(_.extend(sharedOpts, {
-            minDate: now,
+            minDate: 'today',
+
             onClose: function (date) {
+                var
+                    _start = moment($start[0].value, 'DD-MM-YYYY').startOf('day'),
+                    _end = moment($end[0].value, 'DD-MM-YYYY').endOf('day');
+
                 $start.datepicker('option', 'maxDate', date);
+
+                if (oldend != _end.format('DD-MM-YYYY')) {
+                    //$scope.UIStateService.dateRange.start = moment($start[0].value, 'DD-MM-YYYY');
+                    $scope.UIStateService.dateRange.end = moment(date, 'DD-MM-YYYY');
+                    $scope.UIStateService.dateRange.value = {
+                        start: _start,
+                        end: _end
+                    };
+                    $scope.UIStateService.dateRange.trigger = 'reset';
+
+                    $scope.$apply();
+                }
             }
         }));
     }

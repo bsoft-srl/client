@@ -84,61 +84,21 @@
                 </div>
             </div>
 
+            {{dashboard.state.dateRange}}
+
             <div class="row animated fadeInDown" ng-if="dashboard.state.sensori.length">
                 <div class="col-md-3 col-sm-12">
                     <so-datepicker start="dashboard.start" end="dashboard.end"></so-datepicker>
-                </div>
-
-                <div class="col-md-3 col-sm-12">
-                    <div class="panel widget bg-danger">
-                        <div class="row row-table">
-                            <div class="col-xs-4 text-center bg-danger-dark pv-lg">
-                                <em class="fa fa-fire fa-3x"></em>
-                            </div>
-                            <div class="col-xs-8 pv-lg">
-                                <div class="h2 m0 text-bold">0</div>
-                                <div class="text-uppercase">Consumi Gas</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-sm-12">
-                    <div class="panel widget bg-info">
-                        <div class="row row-table">
-                            <div class="col-xs-4 text-center bg-info-dark pv-lg">
-                                <em class="fa fa-tint fa-3x"></em>
-                            </div>
-                            <div class="col-xs-8 pv-lg">
-                                <div class="h2 m0 text-bold">0</div>
-                                <div class="text-uppercase">Consumi Idrici</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-sm-12">
-                    <div class="panel widget bg-warning">
-                        <div class="row row-table">
-                            <div class="col-xs-4 text-center bg-warning-dark pv-lg">
-                                <em class="fa fa-bolt fa-3x"></em>
-                            </div>
-                            <div class="col-xs-8 pv-lg">
-                                <div class="h2 m0 text-bold">0</div>
-                                <div class="text-uppercase">Consumi Elettrici</div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <so-smart-meter
                 ui="dashboard.state.selectedUI.id"
                 model="sm"
-                start="dashboard.start"
-                end="dashboard.end"
+                start="dashboard.state.dateRange.start"
+                end="dashboard.state.dateRange.end"
                 ng-repeat="sm in dashboard.state.sensori"
-                ng-if="dashboard.state.selectedUI && dashboard.start && dashboard.end">
+                ng-if="dashboard.state.selectedUI && dashboard.state.dateRange.start && dashboard.state.dateRange.end">
             </so-smart-meter>
 
             <so-weather ng-if="dashboard.weather"></so-weather>
